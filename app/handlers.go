@@ -3,11 +3,12 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/gorilla/mux"
 	"github.com/jesserahman/goLangPracticeProject/domain"
 	"github.com/jesserahman/goLangPracticeProject/service"
-	"net/http"
-	"time"
 )
 
 type CustomerHandler struct {

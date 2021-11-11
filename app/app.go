@@ -1,11 +1,12 @@
 package app
 
 import (
+	"log"
+	"net/http"
+
 	mux2 "github.com/gorilla/mux"
 	"github.com/jesserahman/goLangPracticeProject/domain"
 	"github.com/jesserahman/goLangPracticeProject/service"
-	"log"
-	"net/http"
 )
 
 func Run() {
