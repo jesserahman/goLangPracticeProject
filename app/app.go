@@ -11,7 +11,7 @@ import (
 func Run(){
 	// create instance of the handler
 
-	handler := CustomerHandler{service.NewCustomerService(domain.GenerateNewCustomers())}
+	handler := CustomerHandler{service.NewCustomerService(domain.NewCustomerRepositoryDb())}
 
 	router := mux2.NewRouter()
 	router.HandleFunc("/greet", handleGreet).Methods(http.MethodGet)

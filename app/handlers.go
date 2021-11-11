@@ -23,6 +23,21 @@ func (handler *CustomerHandler)handleCustomers(w http.ResponseWriter, r *http.Re
 	json.NewEncoder(w).Encode(customers)
 }
 
+func (handler *CustomerHandler)handleCustomer(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	customerId := vars["customer_id"]
+	w.Header().Add("Content-Type", "application/json")
+
+	customers, err := handler.service.GetAllCustomers()
+	if err != nil {
+		fmt.Errorf("Error retrieving customers")
+	}
+
+	json.NewEncoder(w).Encode(getCustomer(customerId, customers))
+}
+
+
+
 
 type TimeStruct struct {
 	CurrentTime time.Time `json:"current_time"`
@@ -48,18 +63,7 @@ func handleGreet(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello World")
 }
 
-func (handler *CustomerHandler)handleCustomer(w http.ResponseWriter, r *http.Request){
-	vars := mux.Vars(r)
-	customerId := vars["customer_id"]
-	w.Header().Add("Content-Type", "application/json")
 
-	customers, err := handler.service.GetAllCustomers()
-	if err != nil {
-		fmt.Errorf("Error retrieving customers")
-	}
-
-	json.NewEncoder(w).Encode(getCustomer(customerId, customers))
-}
 
 func handleCreateCustomer(w http.ResponseWriter, r *http.Request){
 
