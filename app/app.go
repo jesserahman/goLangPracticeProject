@@ -12,7 +12,7 @@ import (
 func Run() {
 	// create instance of the handler
 
-	handler := CustomerHandler{service.NewCustomerService(domain.NewCustomerRepositoryDb())}
+	handler := CustomerHandler{service.NewCustomerService(domain.NewCustomerRepositoryDbConnection())}
 
 	router := mux2.NewRouter()
 	router.HandleFunc("/greet", handleGreet).Methods(http.MethodGet)

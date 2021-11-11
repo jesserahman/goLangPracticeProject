@@ -13,15 +13,25 @@ type CustomerRepositoryDb struct {
 	dbClient *sql.DB
 }
 
-func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
+func (d CustomerRepositoryDb) ById(id string) (*Customer, error) {
+	customersQuery := fmt.Sprintf("select customer_id, name, city, zipcode from customers where customer_id = '%s'", id)
+	row := d.dbClient.QueryRow(customersQuery)
 
+	var c Customer
+	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zip)
+	if err != nil {
+		log.Println("Error scanning row " + err.Error())
+		return nil, err
+	}
+	return &c, nil
+}
+
+func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
 	customersQuery := "select customer_id, name, city, zipcode from customers"
 	rows, err := d.dbClient.Query(customersQuery)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("ROWS FOUND")
-	fmt.Println(&rows)
 	customers := make([]Customer, 0)
 	for rows.Next() {
 		var c Customer
@@ -36,7 +46,7 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
 	return customers, nil
 }
 
-func NewCustomerRepositoryDb() CustomerRepositoryDb {
+func NewCustomerRepositoryDbConnection() CustomerRepositoryDb {
 	dbClient, err := sql.Open("mysql", "root:jesse jesse@tcp(localhost:3306)/banking")
 	if err != nil {
 		fmt.Errorf("Unable to connect to DB")

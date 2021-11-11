@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/jesserahman/goLangPracticeProject/domain"
 	"github.com/jesserahman/goLangPracticeProject/service"
 )
 
@@ -29,27 +28,16 @@ func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Re
 	customerId := vars["customer_id"]
 	w.Header().Add("Content-Type", "application/json")
 
-	customers, err := handler.service.GetAllCustomers()
+	customer, err := handler.service.GetCustomer(customerId)
 	if err != nil {
-		fmt.Errorf("Error retrieving customers")
+		fmt.Errorf("Error retrieving customer")
 	}
 
-	json.NewEncoder(w).Encode(getCustomer(customerId, customers))
+	json.NewEncoder(w).Encode(customer)
 }
 
 type TimeStruct struct {
 	CurrentTime time.Time `json:"current_time"`
-}
-
-func getCustomer(id string, customers []domain.Customer) *domain.Customer {
-	for _, customer := range customers {
-		if customer.Id == id {
-			fmt.Println("Customer found", customer)
-			return &customer
-		}
-	}
-
-	return nil
 }
 
 func handleTime(w http.ResponseWriter, r *http.Request) {
