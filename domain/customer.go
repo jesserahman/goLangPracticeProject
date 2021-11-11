@@ -1,7 +1,7 @@
 package domain
 
 type Customer struct {
-	Id string `json:"customer_id"`
+	Id   string `json:"customer_id"`
 	Name string `json:"name"`
 	City string `json:"city"`
 	Zip  int    `json:"zip"`
@@ -10,4 +10,3 @@ type Customer struct {
 type CustomerRepository interface {
 	FindAll() ([]Customer, error)
 }
-

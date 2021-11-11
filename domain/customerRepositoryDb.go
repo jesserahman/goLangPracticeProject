@@ -13,7 +13,7 @@ type CustomerRepositoryDb struct {
 	dbClient *sql.DB
 }
 
-func (d CustomerRepositoryDb)FindAll() ([]Customer, error){
+func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
 
 	customersQuery := "select customer_id, name, city, zipcode from customers"
 	rows, err := d.dbClient.Query(customersQuery)
@@ -46,5 +46,5 @@ func NewCustomerRepositoryDb() CustomerRepositoryDb {
 	dbClient.SetConnMaxLifetime(time.Minute * 3)
 	dbClient.SetMaxOpenConns(10)
 	dbClient.SetMaxIdleConns(10)
-	return CustomerRepositoryDb{ dbClient}
+	return CustomerRepositoryDb{dbClient}
 }

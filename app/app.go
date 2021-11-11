@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func Run(){
+func Run() {
 	// create instance of the handler
 
 	handler := CustomerHandler{service.NewCustomerService(domain.NewCustomerRepositoryDb())}

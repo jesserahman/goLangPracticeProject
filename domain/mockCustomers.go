@@ -1,4 +1,5 @@
 package domain
+
 //
 //type CustomerRepositoryStub struct {
 //	customers []Customer
