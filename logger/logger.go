@@ -7,7 +7,7 @@ import (
 
 var log *zap.Logger
 
-func init(){
+func init() {
 	var err error
 
 	config := zap.NewProductionConfig()
@@ -25,14 +25,14 @@ func init(){
 	}
 }
 
-func Info(message string, fields ...zap.Field){
+func Info(message string, fields ...zap.Field) {
 	log.Info(message, fields...)
 }
 
-func Debug(message string, fields ...zap.Field){
+func Debug(message string, fields ...zap.Field) {
 	log.Debug(message, fields...)
 }
 
-func Error(message string, fields ...zap.Field){
+func Error(message string, fields ...zap.Field) {
 	log.Error(message, fields...)
 }
