@@ -38,7 +38,9 @@ func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Re
 func writeResponse(w http.ResponseWriter, code int, data interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(code)
-	_ = json.NewEncoder(w).Encode(data)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		panic(err)
+	}
 }
 
 type TimeStruct struct {
