@@ -15,12 +15,14 @@ type CustomerHandler struct {
 }
 
 func (handler *CustomerHandler) handleCustomers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
 	customers, err := handler.service.GetAllCustomers()
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		_, _ = fmt.Fprintf(w, err.Message)
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(err.Code)
+		_ = json.NewEncoder(w).Encode(err.AsMessage())
 	} else {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		_ = json.NewEncoder(w).Encode(customers)
 	}
 
@@ -32,11 +34,12 @@ func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Re
 	customer, err := handler.service.GetCustomer(customerId)
 
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		_, _ = fmt.Fprintf(w, err.Message)
-
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(err.Code)
+		_ = json.NewEncoder(w).Encode(err.AsMessage())
 	} else {
 		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		_ = json.NewEncoder(w).Encode(customer)
 	}
 }
