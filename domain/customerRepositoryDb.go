@@ -32,6 +32,33 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 	return &c, nil
 }
 
+func (d CustomerRepositoryDb) ByStatus(status string) ([]Customer, *errs.AppError) {
+	fmt.Println("Status passed in ", status)
+	customerStatus := 0
+	if status == "active" {
+		customerStatus = 1
+	}
+
+	fmt.Println("Customer status value: ", customerStatus)
+	customersQuery := fmt.Sprintf("select customer_id, name, city, zipcode, status from customers where status = %d", customerStatus)
+	rows, err := d.dbClient.Query(customersQuery)
+	if err != nil {
+		return nil, errs.NewUnexpectedError("unexpected database error")
+	}
+	customers := make([]Customer, 0)
+	for rows.Next() {
+		var c Customer
+		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zip, &c.Status)
+		if err != nil {
+			log.Println("Error scanning Customers " + err.Error())
+			return nil, errs.NewUnexpectedError("unexpected database error")
+		}
+		customers = append(customers, c)
+	}
+
+	return customers, nil
+}
+
 func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 	customersQuery := "select customer_id, name, city, zipcode, status from customers"
 	rows, err := d.dbClient.Query(customersQuery)

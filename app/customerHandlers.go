@@ -3,7 +3,9 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -15,18 +17,31 @@ type CustomerHandler struct {
 }
 
 func (handler *CustomerHandler) handleCustomers(w http.ResponseWriter, r *http.Request) {
-	customers, err := handler.service.GetAllCustomers()
-	if err != nil {
-		writeResponse(w, err.Code, err.AsMessage())
+	status := r.URL.Query().Get("status")
+	status = strings.ToLower(status)
+	log.Println("Status: ", status)
+
+	if status == "active" || status == "inactive" {
+		customers, err := handler.service.GetCustomersByStatus(status)
+		if err != nil {
+			writeResponse(w, err.Code, err.AsMessage())
+		} else {
+			writeResponse(w, http.StatusOK, customers)
+		}
 	} else {
-		writeResponse(w, http.StatusOK, customers)
+		customers, err := handler.service.GetAllCustomers()
+		if err != nil {
+			writeResponse(w, err.Code, err.AsMessage())
+		} else {
+			writeResponse(w, http.StatusOK, customers)
+		}
 	}
 }
 
 func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	customerId := vars["customer_id"]
-	customer, err := handler.service.GetCustomer(customerId)
+	customer, err := handler.service.GetCustomerById(customerId)
 
 	if err != nil {
 		writeResponse(w, err.Code, err.AsMessage())
