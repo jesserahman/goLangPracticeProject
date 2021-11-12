@@ -17,15 +17,10 @@ type CustomerHandler struct {
 func (handler *CustomerHandler) handleCustomers(w http.ResponseWriter, r *http.Request) {
 	customers, err := handler.service.GetAllCustomers()
 	if err != nil {
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(err.Code)
-		_ = json.NewEncoder(w).Encode(err.AsMessage())
+		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(customers)
+		writeResponse(w, http.StatusOK, customers)
 	}
-
 }
 
 func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Request) {
@@ -34,14 +29,16 @@ func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Re
 	customer, err := handler.service.GetCustomer(customerId)
 
 	if err != nil {
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(err.Code)
-		_ = json.NewEncoder(w).Encode(err.AsMessage())
+		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(customer)
+		writeResponse(w, http.StatusOK, customer)
 	}
+}
+
+func writeResponse(w http.ResponseWriter, code int, data interface{}) {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(code)
+	_ = json.NewEncoder(w).Encode(data)
 }
 
 type TimeStruct struct {
