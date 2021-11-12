@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/jesserahman/goLangPracticeProject/errs"
@@ -33,13 +34,7 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 }
 
 func (d CustomerRepositoryDb) ByStatus(status string) ([]Customer, *errs.AppError) {
-	fmt.Println("Status passed in ", status)
-	customerStatus := 0
-	if status == "active" {
-		customerStatus = 1
-	}
-
-	fmt.Println("Customer status value: ", customerStatus)
+	customerStatus, _ := strconv.Atoi(status)
 	customersQuery := fmt.Sprintf("select customer_id, name, city, zipcode, status from customers where status = %d", customerStatus)
 	rows, err := d.dbClient.Query(customersQuery)
 	if err != nil {

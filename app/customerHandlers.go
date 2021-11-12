@@ -3,7 +3,6 @@ package app
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -19,9 +18,14 @@ type CustomerHandler struct {
 func (handler *CustomerHandler) handleCustomers(w http.ResponseWriter, r *http.Request) {
 	status := r.URL.Query().Get("status")
 	status = strings.ToLower(status)
-	log.Println("Status: ", status)
 
-	if status == "active" || status == "inactive" {
+	if status == "active" {
+		status = "1"
+	} else if status == "inactive" {
+		status = "0"
+	}
+
+	if status == "0" || status == "1" {
 		customers, err := handler.service.GetCustomersByStatus(status)
 		if err != nil {
 			writeResponse(w, err.Code, err.AsMessage())
