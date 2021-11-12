@@ -3,10 +3,11 @@ package domain
 import "github.com/jesserahman/goLangPracticeProject/errs"
 
 type Customer struct {
-	Id   string `json:"customer_id"`
-	Name string `json:"name"`
-	City string `json:"city"`
-	Zip  int    `json:"zip"`
+	Id     string `json:"customer_id"`
+	Name   string `json:"name"`
+	City   string `json:"city"`
+	Zip    int    `json:"zip"`
+	Status int    `json:"status"`
 }
 
 type CustomerRepository interface {

@@ -16,11 +16,11 @@ type CustomerRepositoryDb struct {
 }
 
 func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
-	customersQuery := fmt.Sprintf("select customer_id, name, city, zipcode from customers where customer_id = '%s'", id)
+	customersQuery := fmt.Sprintf("select customer_id, name, city, zipcode, status from customers where customer_id = '%s'", id)
 	row := d.dbClient.QueryRow(customersQuery)
 
 	var c Customer
-	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zip)
+	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zip, &c.Status)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errs.NewNotFoundError("customer not found")
@@ -33,7 +33,7 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 }
 
 func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
-	customersQuery := "select customer_id, name, city, zipcode from customers"
+	customersQuery := "select customer_id, name, city, zipcode, status from customers"
 	rows, err := d.dbClient.Query(customersQuery)
 	if err != nil {
 		return nil, errs.NewUnexpectedError("unexpected database error")
@@ -41,7 +41,7 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 	customers := make([]Customer, 0)
 	for rows.Next() {
 		var c Customer
-		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zip)
+		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zip, &c.Status)
 		if err != nil {
 			log.Println("Error scanning Customers " + err.Error())
 			return nil, errs.NewUnexpectedError("unexpected database error")
