@@ -19,13 +19,12 @@ type CustomerRepositoryDb struct {
 }
 
 func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
-	customersQuery := fmt.Sprintf("select customer_id, name, city, zipcode, status from customers where customer_id = '%s'", id)
-	row := d.dbClient.QueryRow(customersQuery)
-
 	var c Customer
-	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zip, &c.Status)
+	customersQuery := fmt.Sprintf("select customer_id, name, city, zipcode, status from customers where customer_id = '%s'", id)
+	err := d.dbClient.Get(&c, customersQuery)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			logger.Error("Error searching DB for customer_id " + err.Error())
 			return nil, errs.NewNotFoundError("customer not found")
 		} else {
 			logger.Error("Error searching DB for customer_id " + err.Error())
