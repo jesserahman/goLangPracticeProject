@@ -43,6 +43,7 @@ func (d CustomerRepositoryDb) ByStatus(status string) ([]Customer, *errs.AppErro
 	// query the DB, and store the result in ${customers}
 	err := d.dbClient.Select(&customers, customersQuery)
 	if err != nil {
+		logger.Error("Error searching by status in the customers table " + err.Error())
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 
@@ -55,6 +56,7 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 	// query the DB, and store the result in ${customers}
 	err := d.dbClient.Select(&customers, customersQuery)
 	if err != nil {
+		logger.Error("Error querying customers table " + err.Error())
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 
@@ -64,7 +66,7 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 func NewCustomerRepositoryDbConnection() CustomerRepositoryDb {
 	dbClient, err := sqlx.Open("mysql", "root:jesse jesse@tcp(localhost:3306)/banking")
 	if err != nil {
-		logger.Error("Error searching DB for customer_id " + err.Error())
+		logger.Error("Error connecting to the DB " + err.Error())
 		panic(err)
 	}
 	// See "Important settings" section.
