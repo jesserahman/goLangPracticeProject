@@ -18,22 +18,25 @@ func (handler *CustomerHandler) handleCustomers(w http.ResponseWriter, r *http.R
 	w.Header().Add("Content-Type", "application/json")
 	customers, err := handler.service.GetAllCustomers()
 	if err != nil {
-		fmt.Errorf("Error retrieving customers")
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = fmt.Fprintf(w, err.Error())
 	}
-	json.NewEncoder(w).Encode(customers)
+	_ = json.NewEncoder(w).Encode(customers)
 }
 
 func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	customerId := vars["customer_id"]
-	w.Header().Add("Content-Type", "application/json")
-
 	customer, err := handler.service.GetCustomer(customerId)
-	if err != nil {
-		fmt.Errorf("Error retrieving customer")
-	}
 
-	json.NewEncoder(w).Encode(customer)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = fmt.Fprintf(w, err.Error())
+
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(customer)
+	}
 }
 
 type TimeStruct struct {
@@ -42,11 +45,11 @@ type TimeStruct struct {
 
 func handleTime(w http.ResponseWriter, r *http.Request) {
 	currentTime := TimeStruct{CurrentTime: time.Now()}
-	json.NewEncoder(w).Encode(currentTime)
+	_ = json.NewEncoder(w).Encode(currentTime)
 }
 
 func handleGreet(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World")
+	_, _ = fmt.Fprintf(w, "Hello World")
 }
 
 func handleCreateCustomer(w http.ResponseWriter, r *http.Request) {

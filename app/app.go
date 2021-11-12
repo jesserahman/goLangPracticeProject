@@ -17,7 +17,7 @@ func Run() {
 	router := mux2.NewRouter()
 	router.HandleFunc("/greet", handleGreet).Methods(http.MethodGet)
 	router.HandleFunc("/customers", handler.handleCustomers).Methods(http.MethodGet)
-	router.HandleFunc("/customer/{customer_id}", handler.handleCustomer).Methods(http.MethodGet)
+	router.HandleFunc("/customer/{customer_id:[0-9]+}", handler.handleCustomer).Methods(http.MethodGet)
 	router.HandleFunc("/customer/create", handleCreateCustomer).Methods(http.MethodPost)
 	router.HandleFunc("/api/time", handleTime).Methods(http.MethodGet)
 	err := http.ListenAndServe("localhost:8000", router)
