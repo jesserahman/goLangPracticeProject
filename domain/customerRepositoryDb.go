@@ -2,10 +2,11 @@ package domain
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"log"
 	"time"
+
+	"github.com/jesserahman/goLangPracticeProject/errs"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -14,7 +15,7 @@ type CustomerRepositoryDb struct {
 	dbClient *sql.DB
 }
 
-func (d CustomerRepositoryDb) ById(id string) (*Customer, error) {
+func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 	customersQuery := fmt.Sprintf("select customer_id, name, city, zipcode from customers where customer_id = '%s'", id)
 	row := d.dbClient.QueryRow(customersQuery)
 
@@ -22,20 +23,20 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, error) {
 	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zip)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, errors.New("customer not found")
+			return nil, errs.NewNotFoundError("customer not found")
 		} else {
 			log.Println("Error scanning customer " + err.Error())
-			return nil, errors.New("unexpected database error")
+			return nil, errs.NewUnexpectedError("unexpected database error")
 		}
 	}
 	return &c, nil
 }
 
-func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
+func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 	customersQuery := "select customer_id, name, city, zipcode from customers"
 	rows, err := d.dbClient.Query(customersQuery)
 	if err != nil {
-		return nil, err
+		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 	customers := make([]Customer, 0)
 	for rows.Next() {
@@ -43,7 +44,7 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
 		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zip)
 		if err != nil {
 			log.Println("Error scanning Customers " + err.Error())
-			return nil, err
+			return nil, errs.NewUnexpectedError("unexpected database error")
 		}
 		customers = append(customers, c)
 	}

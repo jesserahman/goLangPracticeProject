@@ -19,9 +19,11 @@ func (handler *CustomerHandler) handleCustomers(w http.ResponseWriter, r *http.R
 	customers, err := handler.service.GetAllCustomers()
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		_, _ = fmt.Fprintf(w, err.Error())
+		_, _ = fmt.Fprintf(w, err.Message)
+	} else {
+		_ = json.NewEncoder(w).Encode(customers)
 	}
-	_ = json.NewEncoder(w).Encode(customers)
+
 }
 
 func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +33,7 @@ func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Re
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		_, _ = fmt.Fprintf(w, err.Error())
+		_, _ = fmt.Fprintf(w, err.Message)
 
 	} else {
 		w.Header().Add("Content-Type", "application/json")
