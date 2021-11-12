@@ -3,7 +3,7 @@ package domain
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	"github.com/jesserahman/goLangPracticeProject/logger"
 	"strconv"
 	"time"
 
@@ -26,7 +26,7 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 		if err == sql.ErrNoRows {
 			return nil, errs.NewNotFoundError("customer not found")
 		} else {
-			log.Println("Error scanning customer " + err.Error())
+			logger.Error("Error searching DB for customer_id " + err.Error())
 			return nil, errs.NewUnexpectedError("unexpected database error")
 		}
 	}
@@ -45,7 +45,7 @@ func (d CustomerRepositoryDb) ByStatus(status string) ([]Customer, *errs.AppErro
 		var c Customer
 		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zip, &c.Status)
 		if err != nil {
-			log.Println("Error scanning Customers " + err.Error())
+			logger.Error("Error searching DB for customer status " + err.Error())
 			return nil, errs.NewUnexpectedError("unexpected database error")
 		}
 		customers = append(customers, c)
@@ -65,7 +65,7 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 		var c Customer
 		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zip, &c.Status)
 		if err != nil {
-			log.Println("Error scanning Customers " + err.Error())
+			logger.Error("Error searching the DB for customers" + err.Error())
 			return nil, errs.NewUnexpectedError("unexpected database error")
 		}
 		customers = append(customers, c)
@@ -77,7 +77,7 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 func NewCustomerRepositoryDbConnection() CustomerRepositoryDb {
 	dbClient, err := sql.Open("mysql", "root:jesse jesse@tcp(localhost:3306)/banking")
 	if err != nil {
-		fmt.Errorf("Unable to connect to DB")
+		logger.Error("Error searching DB for customer_id " + err.Error())
 		panic(err)
 	}
 	// See "Important settings" section.
