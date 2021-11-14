@@ -3,6 +3,7 @@ package domain
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"strconv"
 	"time"
 
@@ -63,7 +64,14 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 }
 
 func NewCustomerRepositoryDbConnection() CustomerRepositoryDb {
-	dbClient, err := sqlx.Open("mysql", "root:jesse jesse@tcp(localhost:3306)/banking")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbAddress := os.Getenv("DB_ADDRESS")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+
+	datasource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbAddress, dbPort, dbName)
+	dbClient, err := sqlx.Open("mysql", datasource)
 	if err != nil {
 		logger.Error("Error connecting to the DB " + err.Error())
 		panic(err)
