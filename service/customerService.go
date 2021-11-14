@@ -22,7 +22,7 @@ func (service CustomerServiceImpl) GetAllCustomers() ([]dto.CustomerResponse, *e
 		return nil, err
 	}
 	var customersDto []dto.CustomerResponse
-	for _, customer := range customers{
+	for _, customer := range customers {
 		customerDto := customer.ToDto()
 		customersDto = append(customersDto, *customerDto)
 	}
@@ -43,7 +43,7 @@ func (service CustomerServiceImpl) GetCustomersByStatus(status string) ([]dto.Cu
 		return nil, err
 	}
 	var customersDto []dto.CustomerResponse
-	for _, customer := range customers{
+	for _, customer := range customers {
 		customerDto := customer.ToDto()
 		customersDto = append(customersDto, *customerDto)
 	}

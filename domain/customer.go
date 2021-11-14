@@ -19,7 +19,7 @@ type CustomerRepository interface {
 	ByStatus(string) ([]Customer, *errs.AppError)
 }
 
-func (c Customer ) getStatus() string {
+func (c Customer) getStatus() string {
 	status := "active"
 	if c.Status == 0 {
 		status = "inactive"
@@ -27,7 +27,7 @@ func (c Customer ) getStatus() string {
 	return status
 }
 
-func (c Customer) ToDto() *dto.CustomerResponse  {
+func (c Customer) ToDto() *dto.CustomerResponse {
 	return &dto.CustomerResponse{
 		Id:     c.Id,
 		Name:   c.Name,
@@ -36,5 +36,3 @@ func (c Customer) ToDto() *dto.CustomerResponse  {
 		Status: c.getStatus(),
 	}
 }
-
-

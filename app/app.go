@@ -1,8 +1,10 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	mux2 "github.com/gorilla/mux"
 	"github.com/jesserahman/goLangPracticeProject/domain"
@@ -20,7 +22,11 @@ func Run() {
 	router.HandleFunc("/customer/{customer_id:[0-9]+}", handler.handleCustomer).Methods(http.MethodGet)
 	router.HandleFunc("/customer/create", handleCreateCustomer).Methods(http.MethodPost)
 	router.HandleFunc("/api/time", handleTime).Methods(http.MethodGet)
-	err := http.ListenAndServe("localhost:8000", router)
+
+	address := os.Getenv("SERVER_ADDRESS")
+	port := os.Getenv("SERVER_PORT")
+
+	err := http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), router)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

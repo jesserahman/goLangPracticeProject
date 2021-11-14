@@ -5,5 +5,5 @@ type CustomerResponse struct {
 	Name   string `json:"name"`
 	City   string `json:"city"`
 	Zip    int    `json:"zip"`
-	Status string    `json:"status"`
+	Status string `json:"status"`
 }
