@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -69,10 +68,6 @@ type TimeStruct struct {
 func handleTime(w http.ResponseWriter, r *http.Request) {
 	currentTime := TimeStruct{CurrentTime: time.Now()}
 	_ = json.NewEncoder(w).Encode(currentTime)
-}
-
-func handleGreet(w http.ResponseWriter, r *http.Request) {
-	_, _ = fmt.Fprintf(w, "Hello World")
 }
 
 func handleCreateCustomer(w http.ResponseWriter, r *http.Request) {

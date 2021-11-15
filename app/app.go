@@ -5,6 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
+
+	"github.com/jesserahman/goLangPracticeProject/logger"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/joho/godotenv"
 
@@ -26,13 +30,17 @@ func Run() {
 	}
 	sanityCheck()
 
+	dbClient := getDbClient()
+
 	// create instance of the handler
-	handler := CustomerHandler{service.NewCustomerService(domain.NewCustomerRepositoryDbConnection())}
+	customerHandler := CustomerHandler{service.NewCustomerService(domain.NewCustomerRepositoryDbConnection(dbClient))}
+	accountHandler := AccountHandler{service.NewAccountService(domain.NewAccountRepositoryDbConnection(dbClient))}
 
 	router := mux2.NewRouter()
-	router.HandleFunc("/greet", handleGreet).Methods(http.MethodGet)
-	router.HandleFunc("/customers", handler.handleCustomers).Methods(http.MethodGet)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}", handler.handleCustomer).Methods(http.MethodGet)
+	router.HandleFunc("/customers", customerHandler.handleCustomers).Methods(http.MethodGet)
+	router.HandleFunc("/accounts", accountHandler.handleAccounts).Methods(http.MethodGet)
+	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleCustomer).Methods(http.MethodGet)
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account", accountHandler.handleCreateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/customer/create", handleCreateCustomer).Methods(http.MethodPost)
 	router.HandleFunc("/api/time", handleTime).Methods(http.MethodGet)
 
@@ -43,4 +51,24 @@ func Run() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+}
+
+func getDbClient() *sqlx.DB {
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbAddress := os.Getenv("DB_ADDRESS")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+
+	datasource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbAddress, dbPort, dbName)
+	dbClient, err := sqlx.Open("mysql", datasource)
+	if err != nil {
+		logger.Error("Error connecting to the DB " + err.Error())
+		panic(err)
+	}
+	// See "Important settings" section.
+	dbClient.SetConnMaxLifetime(time.Minute * 3)
+	dbClient.SetMaxOpenConns(10)
+	dbClient.SetMaxIdleConns(10)
+	return dbClient
 }

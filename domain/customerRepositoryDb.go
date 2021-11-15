@@ -3,9 +3,7 @@ package domain
 import (
 	"database/sql"
 	"fmt"
-	"os"
 	"strconv"
-	"time"
 
 	"github.com/jesserahman/goLangPracticeProject/logger"
 	"github.com/jmoiron/sqlx"
@@ -63,22 +61,6 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 	return customers, nil
 }
 
-func NewCustomerRepositoryDbConnection() CustomerRepositoryDb {
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbAddress := os.Getenv("DB_ADDRESS")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
-
-	datasource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbAddress, dbPort, dbName)
-	dbClient, err := sqlx.Open("mysql", datasource)
-	if err != nil {
-		logger.Error("Error connecting to the DB " + err.Error())
-		panic(err)
-	}
-	// See "Important settings" section.
-	dbClient.SetConnMaxLifetime(time.Minute * 3)
-	dbClient.SetMaxOpenConns(10)
-	dbClient.SetMaxIdleConns(10)
+func NewCustomerRepositoryDbConnection(dbClient *sqlx.DB) CustomerRepositoryDb {
 	return CustomerRepositoryDb{dbClient}
 }
