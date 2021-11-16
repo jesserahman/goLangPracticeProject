@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
@@ -16,6 +17,19 @@ type AccountRepositoryDb struct {
 func (a AccountRepositoryDb) FindAll() ([]Account, *errs.AppError) {
 	accounts := make([]Account, 0)
 	accountsQuery := "select * from accounts"
+	// query the DB, and store the result in ${customers}
+	err := a.dbClient.Select(&accounts, accountsQuery)
+	if err != nil {
+		logger.Error("Error querying customers table " + err.Error())
+		return nil, errs.NewUnexpectedError("unexpected database error")
+	}
+
+	return accounts, nil
+}
+
+func (a AccountRepositoryDb) FindByCustomerId(customerId string) ([]Account, *errs.AppError) {
+	accounts := make([]Account, 0)
+	accountsQuery := fmt.Sprintf("select * from banking.accounts where customer_id = %s", customerId)
 	// query the DB, and store the result in ${customers}
 	err := a.dbClient.Select(&accounts, accountsQuery)
 	if err != nil {

@@ -11,6 +11,7 @@ import (
 type AccountService interface {
 	GetAllAccounts() ([]dto.AccountResponse, *errs.AppError)
 	CreateNewAccount(request dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
+	GetAccountsByCustomerId(string) ([]dto.AccountResponse, *errs.AppError)
 }
 
 type AccountServiceImpl struct {
@@ -19,6 +20,19 @@ type AccountServiceImpl struct {
 
 func (service AccountServiceImpl) GetAllAccounts() ([]dto.AccountResponse, *errs.AppError) {
 	accounts, err := service.repository.FindAll()
+	if err != nil {
+		return nil, err
+	}
+	var accountsDto []dto.AccountResponse
+	for _, account := range accounts {
+		accountDto := account.ToAccountResponseDto()
+		accountsDto = append(accountsDto, *accountDto)
+	}
+	return accountsDto, nil
+}
+
+func (service AccountServiceImpl) GetAccountsByCustomerId(customerId string) ([]dto.AccountResponse, *errs.AppError) {
+	accounts, err := service.repository.FindByCustomerId(customerId)
 	if err != nil {
 		return nil, err
 	}
