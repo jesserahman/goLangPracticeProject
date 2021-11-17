@@ -35,12 +35,14 @@ func Run() {
 	// create instance of the handler
 	customerHandler := CustomerHandler{service.NewCustomerService(domain.NewCustomerRepositoryDbConnection(dbClient))}
 	accountHandler := AccountHandler{service.NewAccountService(domain.NewAccountRepositoryDbConnection(dbClient))}
+	transactionHandler := TransactionHandler{service.NewTransactionService(domain.NewTransactionRepositoryDbConnection(dbClient))}
 
 	router := mux2.NewRouter()
 	router.HandleFunc("/customers", customerHandler.handleCustomers).Methods(http.MethodGet)
 	router.HandleFunc("/accounts", accountHandler.handleAccounts).Methods(http.MethodGet)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleCustomer).Methods(http.MethodGet)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/account", accountHandler.handleCreateAccount).Methods(http.MethodPost)
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/accounts/{account_id:[0-9]+}/transaction", transactionHandler.handleCreateNewTransaction).Methods(http.MethodPost)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/accounts", accountHandler.handleGetAccountsByCustomerId).Methods(http.MethodGet)
 	router.HandleFunc("/customer/create", handleCreateCustomer).Methods(http.MethodPost)
 	router.HandleFunc("/api/time", handleTime).Methods(http.MethodGet)
