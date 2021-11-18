@@ -33,21 +33,34 @@ func (t TransactionRepositoryDb)ExecuteTransaction(transaction Transaction) (*Tr
 	} else {
 		return nil, errs.NewUnexpectedError("invalid transaction type")
 	}
-	accountUpdate := fmt.Sprintf("Update banking.accounts Set amount = %f WHERE account_id = '%s'", newBalance, transaction.AccountId)
-	result, err := t.dbClient.Exec(accountUpdate, )
-	log.Println("result: ", result)
+	accountUpdateQuery := fmt.Sprintf("Update banking.accounts Set amount = %f WHERE account_id = '%s'", newBalance, transaction.AccountId)
+	_, err = t.dbClient.Exec(accountUpdateQuery)
 	if err != nil {
 		logger.Error("Error updating Accounts table " + err.Error())
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 
-	id, err := result.LastInsertId()
-	if err != nil {
-		logger.Error("Error getting last inserted ID" + err.Error())
+
+
+	// insert transaction into transactions table
+	transactionsInsert := "INSERT into banking.transactions (account_id, amount, transaction_type) VALUES (?, ?, ?)"
+	result, dbErr := t.dbClient.Exec(transactionsInsert, transaction.AccountId, transaction.Amount, transaction.TransactionType)
+	log.Println("result: ", result)
+	if dbErr != nil {
+		logger.Error("Error inserting into Transactions table " + dbErr.Error())
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 
-	transaction.AccountId = strconv.FormatInt(id, 10)
+	id, resultErr := result.LastInsertId()
+	if resultErr != nil {
+		logger.Error("Error getting last inserted ID" + resultErr.Error())
+		return nil, errs.NewUnexpectedError("unexpected database error")
+	}
+
+	transaction.TransactionId = strconv.FormatInt(id, 10)
+
+	// set transaction amount as new account balance to get returned to the user
+	transaction.Amount = newBalance
 
 	return &transaction, nil
 }
