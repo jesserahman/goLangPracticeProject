@@ -9,6 +9,7 @@ import (
 
 type TransactionService interface {
 	CreateNewTransaction(request dto.NewTransactionRequest) (*dto.NewTransactionResponse, *errs.AppError)
+	GetAllTransactionsByAccountId(accountId string) ([]dto.TransactionResponse, *errs.AppError)
 }
 
 type TransactionServiceImpl struct {
@@ -27,10 +28,26 @@ func (service TransactionServiceImpl) CreateNewTransaction(request dto.NewTransa
 		return nil, err
 	}
 
-	transactionResponseDto := updatedTransaction.ToTransactionResponseDto()
+	transactionResponseDto := updatedTransaction.ToNewTransactionResponseDto()
 
 	return transactionResponseDto, nil
 }
+
+func (service TransactionServiceImpl) GetAllTransactionsByAccountId(accountId string) ([]dto.TransactionResponse, *errs.AppError) {
+
+	transactions, err := service.repository.FindByAccountId(accountId)
+	if err != nil {
+		return nil, err
+	}
+	var transactionsDto []dto.TransactionResponse
+	for _, transaction := range transactions {
+		transactionDto := transaction.ToTransactionResponseDto()
+		transactionsDto = append(transactionsDto, *transactionDto)
+	}
+	return transactionsDto, nil
+}
+
+
 
 func NewTransactionService(repo domain.TransactionRepository) TransactionServiceImpl {
 	return TransactionServiceImpl{repo}

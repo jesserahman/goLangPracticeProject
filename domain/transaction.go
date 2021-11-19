@@ -14,12 +14,23 @@ type Transaction struct {
 }
 
 type TransactionRepository interface {
-	ExecuteTransaction(transaction Transaction) (*Transaction, *errs.AppError)
+	ExecuteTransaction(Transaction) (*Transaction, *errs.AppError)
+	FindByAccountId(string)([]Transaction, *errs.AppError)
 }
 
-func (t Transaction)ToTransactionResponseDto() *dto.NewTransactionResponse{
+func (t Transaction)ToNewTransactionResponseDto() *dto.NewTransactionResponse{
 	return &dto.NewTransactionResponse{
 		TransactionId: t.TransactionId,
 		Balance:       t.Amount,
+	}
+}
+
+func (t Transaction)ToTransactionResponseDto() *dto.TransactionResponse {
+	return &dto.TransactionResponse{
+		TransactionId:   t.TransactionId,
+		AccountId:       t.AccountId,
+		Amount:          t.Amount,
+		TransactionType: t.TransactionType,
+		TransactionDate: t.TransactionDate,
 	}
 }

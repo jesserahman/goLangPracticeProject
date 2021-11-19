@@ -75,6 +75,21 @@ func (t TransactionRepositoryDb)ExecuteTransaction(transaction Transaction) (*Tr
 	return &transaction, nil
 }
 
+func (t TransactionRepositoryDb)FindByAccountId(accountId string) ([]Transaction, *errs.AppError){
+	transactions := make([]Transaction, 0)
+	transactionsQuery := fmt.Sprintf("select * from banking.transactions where account_id = %s", accountId)
+
+	// query the DB, and store the result in transactions
+	err := t.dbClient.Select(&transactions, transactionsQuery)
+	if err != nil {
+		logger.Error("Error querying transactions table " + err.Error())
+		return nil, errs.NewUnexpectedError("unexpected database error")
+	}
+
+	return transactions, nil
+}
+
+
 func NewTransactionRepositoryDbConnection(dbClient *sqlx.DB) TransactionRepository {
 	return TransactionRepositoryDb{dbClient}
 }

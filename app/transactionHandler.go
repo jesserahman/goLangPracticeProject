@@ -32,3 +32,18 @@ func (handler *TransactionHandler) handleCreateNewTransaction(w http.ResponseWri
 	}
 
 }
+
+func (handler *TransactionHandler) handleGetAllTransactionsByAccountId(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	accountId := vars["account_id"]
+
+	fmt.Println(accountId)
+
+	response, appError := handler.service.GetAllTransactionsByAccountId(accountId)
+	if appError != nil {
+		writeResponse(w, appError.Code, appError.AsMessage())
+	} else {
+		writeResponse(w, http.StatusOK, response)
+	}
+}
+

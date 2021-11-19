@@ -30,7 +30,8 @@ func (a AccountRepositoryDb) FindAll() ([]Account, *errs.AppError) {
 func (a AccountRepositoryDb) FindByCustomerId(customerId string) ([]Account, *errs.AppError) {
 	accounts := make([]Account, 0)
 	accountsQuery := fmt.Sprintf("select * from banking.accounts where customer_id = %s", customerId)
-	// query the DB, and store the result in ${customers}
+
+	// query the DB, and store the result in var customers
 	err := a.dbClient.Select(&accounts, accountsQuery)
 	if err != nil {
 		logger.Error("Error querying customers table " + err.Error())
