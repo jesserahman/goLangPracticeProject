@@ -2,11 +2,11 @@ package app
 
 import (
 	"encoding/json"
-	"fmt"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/jesserahman/goLangPracticeProject/dto"
 	"github.com/jesserahman/goLangPracticeProject/service"
-	"net/http"
 )
 
 type TransactionHandler struct {
@@ -17,9 +17,10 @@ func (handler *TransactionHandler) handleCreateNewTransaction(w http.ResponseWri
 	vars := mux.Vars(r)
 	accountId := vars["account_id"]
 
-	fmt.Println(accountId)
 	var request dto.NewTransactionRequest
+	request.AccountId = accountId
 	err := json.NewDecoder(r.Body).Decode(&request)
+
 	if err != nil {
 		writeResponse(w, http.StatusBadRequest, err.Error())
 	} else {
@@ -30,14 +31,11 @@ func (handler *TransactionHandler) handleCreateNewTransaction(w http.ResponseWri
 			writeResponse(w, http.StatusOK, response)
 		}
 	}
-
 }
 
 func (handler *TransactionHandler) handleGetAllTransactionsByAccountId(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	accountId := vars["account_id"]
-
-	fmt.Println(accountId)
 
 	response, appError := handler.service.GetAllTransactionsByAccountId(accountId)
 	if appError != nil {
@@ -46,4 +44,3 @@ func (handler *TransactionHandler) handleGetAllTransactionsByAccountId(w http.Re
 		writeResponse(w, http.StatusOK, response)
 	}
 }
-

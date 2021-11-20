@@ -2,18 +2,20 @@ package domain
 
 import (
 	"fmt"
+	"math"
+	"strconv"
+	"strings"
+
 	"github.com/jesserahman/goLangPracticeProject/errs"
 	"github.com/jesserahman/goLangPracticeProject/logger"
 	"github.com/jmoiron/sqlx"
-	"strconv"
-	"strings"
 )
 
 type TransactionRepositoryDb struct {
 	dbClient *sqlx.DB
 }
 
-func (t TransactionRepositoryDb)ExecuteTransaction(transaction Transaction) (*Transaction, *errs.AppError){
+func (t TransactionRepositoryDb) ExecuteTransaction(transaction Transaction) (*Transaction, *errs.AppError) {
 	// check if amount is negative
 	if transaction.Amount < 0 {
 		logger.Error("Negative transaction amount")
@@ -33,7 +35,7 @@ func (t TransactionRepositoryDb)ExecuteTransaction(transaction Transaction) (*Tr
 	var newBalance float64
 	if strings.ToLower(transaction.TransactionType) == "withdraw" {
 		//verify withdraw amount is not greater than total amount in the account
-		if transaction.Amount > account.Amount{
+		if transaction.Amount > account.Amount {
 			logger.Error("Withdraw amount exceeds total account balance")
 			return nil, errs.NewUnexpectedError("withdraw amount exceeds total account balance")
 		}
@@ -43,6 +45,9 @@ func (t TransactionRepositoryDb)ExecuteTransaction(transaction Transaction) (*Tr
 	} else {
 		return nil, errs.NewUnexpectedError("invalid transaction type")
 	}
+
+	//rounding float64 to 2 decimal places
+	newBalance = math.Round(newBalance*100) / 100
 
 	// Update bank account with new balance
 	accountUpdateQuery := fmt.Sprintf("Update banking.accounts Set amount = %f WHERE account_id = '%s'", newBalance, transaction.AccountId)
@@ -75,7 +80,7 @@ func (t TransactionRepositoryDb)ExecuteTransaction(transaction Transaction) (*Tr
 	return &transaction, nil
 }
 
-func (t TransactionRepositoryDb)FindByAccountId(accountId string) ([]Transaction, *errs.AppError){
+func (t TransactionRepositoryDb) FindByAccountId(accountId string) ([]Transaction, *errs.AppError) {
 	transactions := make([]Transaction, 0)
 	transactionsQuery := fmt.Sprintf("select * from banking.transactions where account_id = %s", accountId)
 
@@ -88,7 +93,6 @@ func (t TransactionRepositoryDb)FindByAccountId(accountId string) ([]Transaction
 
 	return transactions, nil
 }
-
 
 func NewTransactionRepositoryDbConnection(dbClient *sqlx.DB) TransactionRepository {
 	return TransactionRepositoryDb{dbClient}

@@ -1,10 +1,11 @@
 package service
 
 import (
+	"time"
+
 	"github.com/jesserahman/goLangPracticeProject/domain"
 	"github.com/jesserahman/goLangPracticeProject/dto"
 	"github.com/jesserahman/goLangPracticeProject/errs"
-	"time"
 )
 
 type TransactionService interface {
@@ -46,8 +47,6 @@ func (service TransactionServiceImpl) GetAllTransactionsByAccountId(accountId st
 	}
 	return transactionsDto, nil
 }
-
-
 
 func NewTransactionService(repo domain.TransactionRepository) TransactionServiceImpl {
 	return TransactionServiceImpl{repo}
