@@ -42,9 +42,9 @@ func Run() {
 	router.HandleFunc("/accounts", accountHandler.handleAccounts).Methods(http.MethodGet)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleCustomer).Methods(http.MethodGet)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/account", accountHandler.handleCreateAccount).Methods(http.MethodPost)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transactions", transactionHandler.handleGetAllTransactionsByAccountId).Methods(http.MethodGet)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transaction", transactionHandler.handleCreateNewTransaction).Methods(http.MethodPost)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/accounts", accountHandler.handleGetAccountsByCustomerId).Methods(http.MethodGet)
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transaction", transactionHandler.handleCreateNewTransaction).Methods(http.MethodPost)
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transactions", transactionHandler.handleGetAllTransactionsByAccountId).Methods(http.MethodGet)
 	router.HandleFunc("/customer/create", handleCreateCustomer).Methods(http.MethodPost)
 	router.HandleFunc("/api/time", handleTime).Methods(http.MethodGet)
 
