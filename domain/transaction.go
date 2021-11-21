@@ -3,6 +3,7 @@ package domain
 import (
 	"github.com/jesserahman/goLangPracticeProject/dto"
 	"github.com/jesserahman/goLangPracticeProject/errs"
+	"github.com/jesserahman/goLangPracticeProject/logger"
 )
 
 const WITHDRAWAL = "withdrawal"
@@ -36,4 +37,17 @@ func (t Transaction) ToTransactionResponseDto() *dto.TransactionResponse {
 		TransactionType: t.TransactionType,
 		TransactionDate: t.TransactionDate,
 	}
+}
+
+func (t Transaction) Validate() *errs.AppError {
+	if t.Amount < 0 {
+		logger.Error("transaction amount cannot a negative ")
+		return errs.NewUnexpectedError("invalid transaction amount")
+	}
+
+	if t.TransactionType != WITHDRAWAL && t.TransactionType != DEPOSIT {
+		logger.Error("Transaction type must be either 'withdrawal' or 'deposit' ")
+		return errs.NewUnexpectedError("invalid transaction type")
+	}
+	return nil
 }
