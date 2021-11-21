@@ -5,6 +5,9 @@ import (
 	"github.com/jesserahman/goLangPracticeProject/errs"
 )
 
+const WITHDRAWAL = "withdrawal"
+const DEPOSIT = "deposit"
+
 type Transaction struct {
 	TransactionId   string  `json:"transaction_id" db:"transaction_id"`
 	AccountId       string  `json:"account_id" db:"account_id"`

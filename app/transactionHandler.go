@@ -20,7 +20,6 @@ func (handler *TransactionHandler) handleCreateNewTransaction(w http.ResponseWri
 	var request dto.NewTransactionRequest
 	request.AccountId = accountId
 	err := json.NewDecoder(r.Body).Decode(&request)
-
 	if err != nil {
 		writeResponse(w, http.StatusBadRequest, err.Error())
 	} else {

@@ -16,12 +16,6 @@ type TransactionRepositoryDb struct {
 }
 
 func (t TransactionRepositoryDb) ExecuteTransaction(transaction Transaction) (*Transaction, *errs.AppError) {
-	// check if amount is negative
-	if transaction.Amount < 0 {
-		logger.Error("Negative transaction amount")
-		return nil, errs.NewUnexpectedError("transaction account cannot be negative")
-	}
-
 	// get current bank account details
 	accountQuery := fmt.Sprintf("select * from banking.accounts where account_id = %s", transaction.AccountId)
 	account := Account{AccountId: transaction.AccountId}
@@ -33,17 +27,15 @@ func (t TransactionRepositoryDb) ExecuteTransaction(transaction Transaction) (*T
 
 	// determine new bank account balance
 	var newBalance float64
-	if strings.ToLower(transaction.TransactionType) == "withdraw" {
+	if strings.ToLower(transaction.TransactionType) == WITHDRAWAL {
 		//verify withdraw amount is not greater than total amount in the account
 		if transaction.Amount > account.Amount {
 			logger.Error("Withdraw amount exceeds total account balance")
 			return nil, errs.NewUnexpectedError("withdraw amount exceeds total account balance")
 		}
 		newBalance = account.Amount - transaction.Amount
-	} else if strings.ToLower(transaction.TransactionType) == "deposit" {
-		newBalance = account.Amount + transaction.Amount
 	} else {
-		return nil, errs.NewUnexpectedError("invalid transaction type")
+		newBalance = account.Amount + transaction.Amount
 	}
 
 	//rounding float64 to 2 decimal places

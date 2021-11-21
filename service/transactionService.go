@@ -3,6 +3,8 @@ package service
 import (
 	"time"
 
+	"github.com/jesserahman/goLangPracticeProject/logger"
+
 	"github.com/jesserahman/goLangPracticeProject/domain"
 	"github.com/jesserahman/goLangPracticeProject/dto"
 	"github.com/jesserahman/goLangPracticeProject/errs"
@@ -24,6 +26,16 @@ func (service TransactionServiceImpl) CreateNewTransaction(request dto.NewTransa
 		TransactionType: request.TransactionType,
 		TransactionDate: time.Now().Format("2006-01-01 15:04:05"),
 	}
+	if transaction.Amount < 0 {
+		logger.Error("transaction amount cannot a negative ")
+		return nil, errs.NewUnexpectedError("invalid transaction amount")
+	}
+
+	if transaction.TransactionType != domain.WITHDRAWAL && transaction.TransactionType != domain.DEPOSIT {
+		logger.Error("Transaction type must be either 'withdrawal' or 'deposit' ")
+		return nil, errs.NewUnexpectedError("invalid transaction type")
+	}
+
 	updatedTransaction, err := service.repository.ExecuteTransaction(transaction)
 	if err != nil {
 		return nil, err
