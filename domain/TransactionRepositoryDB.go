@@ -41,19 +41,36 @@ func (t TransactionRepositoryDb) ExecuteTransaction(transaction Transaction) (*T
 	//rounding float64 to 2 decimal places
 	newBalance = math.Round(newBalance*100) / 100
 
+	// starting database transaction block
+	tx, err := t.dbClient.Begin()
+	if err != nil {
+		logger.Error("Error starting the db transaction block " + err.Error())
+		return nil, errs.NewUnexpectedError("unexpected database error")
+	}
+
 	// Update bank account with new balance
 	accountUpdateQuery := fmt.Sprintf("Update banking.accounts Set amount = %f WHERE account_id = '%s'", newBalance, transaction.AccountId)
-	_, err = t.dbClient.Exec(accountUpdateQuery)
+	_, err = tx.Exec(accountUpdateQuery)
 	if err != nil {
+		tx.Rollback()
 		logger.Error("Error updating Accounts table " + err.Error())
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 
 	// insert transaction into transactions table
 	transactionsInsert := "INSERT into banking.transactions (account_id, amount, transaction_type) VALUES (?, ?, ?)"
-	result, dbErr := t.dbClient.Exec(transactionsInsert, transaction.AccountId, transaction.Amount, transaction.TransactionType)
+	result, dbErr := tx.Exec(transactionsInsert, transaction.AccountId, transaction.Amount, transaction.TransactionType)
 	if dbErr != nil {
+		tx.Rollback()
 		logger.Error("Error inserting into Transactions table " + dbErr.Error())
+		return nil, errs.NewUnexpectedError("unexpected database error")
+	}
+
+	// if there are no errors then commit the change
+	commitErr := tx.Commit()
+	if commitErr != nil {
+		tx.Rollback()
+		logger.Error("Error committing changes" + commitErr.Error())
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 
