@@ -14,6 +14,7 @@ There are currently 7 working endpoints in this project
 - PATCH `/customer/#{customer_id}` updates the info for a specific customer (name, city, zip, status)
 - POST `/customer/#{customer?id}/account` creates an account for a specific customer
 - GET `/customer/#{customer?id}/accounts` returns all accounts for a specific customer
+- DELETE `/customer/#{customer?id}/account/#{account_id}` deletes a customer's account and all transactions associated with that account
 - POST `/customer/#{customer?id}/account/#{account_id}/transaction` creates a new transaction for a specific customer's account
 - GET `/customer/#{customer?id}/account/#{account_id}/transactions` returns all transactions for a specific customer's account
 

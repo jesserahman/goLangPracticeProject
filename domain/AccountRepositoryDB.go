@@ -60,6 +60,43 @@ func (a AccountRepositoryDb) Save(account Account) (*Account, *errs.AppError) {
 	return &account, nil
 }
 
+func (a AccountRepositoryDb) DeleteAccountAndTransactions(accountId string) *errs.AppError {
+	// starting database transaction block
+	tx, err := a.dbClient.Begin()
+	if err != nil {
+		logger.Error("Error starting the db transaction block " + err.Error())
+		return errs.NewUnexpectedError("unexpected database error")
+	}
+
+	// delete all transactions for that account
+	transactionsDelete := fmt.Sprintf("DELETE FROM transactions WHERE account_id = %s", accountId)
+	_, transacationsDeleteErr := tx.Exec(transactionsDelete)
+	if transacationsDeleteErr != nil {
+		tx.Rollback()
+		logger.Error("Error deleting from Transactions table " + transacationsDeleteErr.Error())
+		return errs.NewUnexpectedError("unexpected database error")
+	}
+
+	// delete account from accounts table
+	accountDelete := fmt.Sprintf("DELETE FROM accounts WHERE account_id = %s", accountId)
+	_, accountDeleteErr := tx.Exec(accountDelete)
+	if accountDeleteErr != nil {
+		tx.Rollback()
+		logger.Error("Error deleting from Accounts table " + accountDeleteErr.Error())
+		return errs.NewUnexpectedError("unexpected database error")
+	}
+
+	// if there are no errors then commit the change
+	commitErr := tx.Commit()
+	if commitErr != nil {
+		tx.Rollback()
+		logger.Error("Error committing changes" + commitErr.Error())
+		return errs.NewUnexpectedError("unexpected database error")
+	}
+
+	return nil
+}
+
 func NewAccountRepositoryDbConnection(dbClient *sqlx.DB) AccountRepository {
 	return AccountRepositoryDb{dbClient}
 }

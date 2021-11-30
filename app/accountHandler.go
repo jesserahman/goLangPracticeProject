@@ -52,5 +52,16 @@ func (handler *AccountHandler) handleCreateAccount(w http.ResponseWriter, r *htt
 			writeResponse(w, http.StatusCreated, response)
 		}
 	}
+}
 
+func (handler *AccountHandler) handleDeleteAccount(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	accountId := vars["account_id"]
+
+	err := handler.service.DeleteAccountAndTransactionsByAccountId(accountId)
+	if err != nil {
+		writeResponse(w, err.Code, err.AsMessage())
+	} else {
+		writeResponse(w, http.StatusOK, nil)
+	}
 }

@@ -18,6 +18,7 @@ type AccountRepository interface {
 	FindAll() ([]Account, *errs.AppError)
 	Save(Account) (*Account, *errs.AppError)
 	FindByCustomerId(string) ([]Account, *errs.AppError)
+	DeleteAccountAndTransactions(string) *errs.AppError
 }
 
 func (a Account) ToAccountResponseDto() *dto.AccountResponse {

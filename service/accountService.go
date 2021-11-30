@@ -12,6 +12,7 @@ type AccountService interface {
 	GetAllAccounts() ([]dto.AccountResponse, *errs.AppError)
 	CreateNewAccount(request dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
 	GetAccountsByCustomerId(string) ([]dto.AccountResponse, *errs.AppError)
+	DeleteAccountAndTransactionsByAccountId(accountId string) *errs.AppError
 }
 
 type AccountServiceImpl struct {
@@ -42,6 +43,14 @@ func (service AccountServiceImpl) GetAccountsByCustomerId(customerId string) ([]
 		accountsDto = append(accountsDto, *accountDto)
 	}
 	return accountsDto, nil
+}
+
+func (service AccountServiceImpl) DeleteAccountAndTransactionsByAccountId(accountId string) *errs.AppError {
+	err := service.repository.DeleteAccountAndTransactions(accountId)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (service AccountServiceImpl) CreateNewAccount(request dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError) {
