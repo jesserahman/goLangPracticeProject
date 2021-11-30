@@ -17,5 +17,43 @@ There are currently 7 working endpoints in this project
 - POST `/customer/#{customer?id}/account/#{account_id}/transaction` creates a new transaction for a specific customer's account
 - GET `/customer/#{customer?id}/account/#{account_id}/transactions` returns all transactions for a specific customer's account
 
+Sample JSON examples
+
+``` 
+POST /customer
+{
+    "name" : "John Doe",
+    "date_of_birth" : "1990-01-30",
+    "city" : "Los Angeles, California",
+    "zip_code" : 90210,
+    "status" : 1
+}
+```
 
 
+``` 
+PATCH /customer/{customer_id}
+{
+    "name" : "Updated John Doe",
+    "date_of_birth" : "1990-01-30",
+    "city" : "Los Angeles, California",
+    "zip_code" : 90210,
+    "status" : 1
+}
+```
+
+``` 
+POST /customer/{customer_id}/account
+{
+    "account_type" : "checking",
+    "amount" : 5000
+}
+```
+
+``` 
+POST /customer/{customer_id}/account/{account_id}/transactions
+{
+    "amount" : 100.00,
+    "transaction_type" : "deposit"
+}
+```
