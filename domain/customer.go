@@ -6,17 +6,19 @@ import (
 )
 
 type Customer struct {
-	Id     string `json:"customer_id" db:"customer_id"`
-	Name   string `json:"name" db:"name"`
-	City   string `json:"city" db:"city"`
-	Zip    int    `json:"zip" db:"zipcode"`
-	Status int    `json:"status" db:"status"`
+	Id          string `json:"customer_id" db:"customer_id"`
+	Name        string `json:"name" db:"name"`
+	City        string `json:"city" db:"city"`
+	Zip         int    `json:"zip" db:"zipcode"`
+	Status      int    `json:"status" db:"status"`
+	DateOfBirth string `json:"date_of_birth" db:"date_of_birth"`
 }
 
 type CustomerRepository interface {
 	FindAll() ([]Customer, *errs.AppError)
 	ById(string) (*Customer, *errs.AppError)
 	ByStatus(string) ([]Customer, *errs.AppError)
+	Save(Customer) (*Customer, *errs.AppError)
 }
 
 func (c Customer) getStatus() string {
@@ -29,10 +31,15 @@ func (c Customer) getStatus() string {
 
 func (c Customer) ToDto() *dto.CustomerResponse {
 	return &dto.CustomerResponse{
-		Id:     c.Id,
-		Name:   c.Name,
-		City:   c.City,
-		Zip:    c.Zip,
-		Status: c.getStatus(),
+		Id:          c.Id,
+		Name:        c.Name,
+		City:        c.City,
+		Zip:         c.Zip,
+		Status:      c.getStatus(),
+		DateOfBirth: c.DateOfBirth,
 	}
+}
+
+func (c Customer) ToNewCustomerResponseDto() *dto.NewCustomerResponse {
+	return &dto.NewCustomerResponse{CustomerId: c.Id}
 }

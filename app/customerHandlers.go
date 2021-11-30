@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jesserahman/goLangPracticeProject/dto"
+
 	"github.com/gorilla/mux"
 	"github.com/jesserahman/goLangPracticeProject/service"
 )
@@ -53,6 +55,21 @@ func (handler *CustomerHandler) handleCustomer(w http.ResponseWriter, r *http.Re
 	}
 }
 
+func (handler *CustomerHandler) handleCreateCustomer(w http.ResponseWriter, r *http.Request) {
+	var request dto.NewCustomerRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		writeResponse(w, http.StatusBadRequest, err.Error())
+	} else {
+		customer, customerErr := handler.service.CreateNewCustomer(request)
+		if customerErr != nil {
+			writeResponse(w, customerErr.Code, customerErr.AsMessage())
+		} else {
+			writeResponse(w, http.StatusOK, customer)
+		}
+	}
+}
+
 func writeResponse(w http.ResponseWriter, code int, data interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(code)
@@ -68,8 +85,4 @@ type TimeStruct struct {
 func handleTime(w http.ResponseWriter, r *http.Request) {
 	currentTime := TimeStruct{CurrentTime: time.Now()}
 	_ = json.NewEncoder(w).Encode(currentTime)
-}
-
-func handleCreateCustomer(w http.ResponseWriter, r *http.Request) {
-
 }

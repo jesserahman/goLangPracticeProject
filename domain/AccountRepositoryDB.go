@@ -50,9 +50,9 @@ func (a AccountRepositoryDb) Save(account Account) (*Account, *errs.AppError) {
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 
-	id, err := result.LastInsertId()
-	if err != nil {
-		logger.Error("Error getting last inserted ID" + err.Error())
+	id, resultErr := result.LastInsertId()
+	if resultErr != nil {
+		logger.Error("Error getting last inserted ID" + resultErr.Error())
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 

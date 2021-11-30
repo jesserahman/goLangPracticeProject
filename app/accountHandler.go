@@ -39,6 +39,7 @@ func (handler *AccountHandler) handleCreateAccount(w http.ResponseWriter, r *htt
 	customerId := vars["customer_id"]
 
 	var request dto.NewAccountRequest
+
 	request.CustomerId = customerId
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {

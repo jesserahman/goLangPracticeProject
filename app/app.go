@@ -45,7 +45,7 @@ func Run() {
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/accounts", accountHandler.handleGetAccountsByCustomerId).Methods(http.MethodGet)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transaction", transactionHandler.handleCreateNewTransaction).Methods(http.MethodPost)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transactions", transactionHandler.handleGetAllTransactionsByAccountId).Methods(http.MethodGet)
-	router.HandleFunc("/customer/create", handleCreateCustomer).Methods(http.MethodPost)
+	router.HandleFunc("/customer", customerHandler.handleCreateCustomer).Methods(http.MethodPost)
 	router.HandleFunc("/api/time", handleTime).Methods(http.MethodGet)
 
 	address := os.Getenv("SERVER_ADDRESS")

@@ -10,6 +10,7 @@ type CustomerService interface {
 	GetAllCustomers() ([]dto.CustomerResponse, *errs.AppError)
 	GetCustomerById(string) (*dto.CustomerResponse, *errs.AppError)
 	GetCustomersByStatus(string) ([]dto.CustomerResponse, *errs.AppError)
+	CreateNewCustomer(dto.NewCustomerRequest) (*dto.NewCustomerResponse, *errs.AppError)
 }
 
 type CustomerServiceImpl struct {
@@ -48,6 +49,27 @@ func (service CustomerServiceImpl) GetCustomersByStatus(status string) ([]dto.Cu
 		customersDto = append(customersDto, *customerDto)
 	}
 	return customersDto, nil
+}
+
+func (service CustomerServiceImpl) CreateNewCustomer(newCustomerRequestDto dto.NewCustomerRequest) (*dto.NewCustomerResponse, *errs.AppError) {
+	err := newCustomerRequestDto.Validate()
+	if err != nil {
+		return nil, err
+	}
+
+	customer := domain.Customer{
+		Name:        newCustomerRequestDto.Name,
+		City:        newCustomerRequestDto.City,
+		Zip:         newCustomerRequestDto.ZipCode,
+		Status:      newCustomerRequestDto.Status,
+		DateOfBirth: newCustomerRequestDto.DateOfBirth,
+	}
+	response, saveCustomerErr := service.repository.Save(customer)
+	if saveCustomerErr != nil {
+		return nil, saveCustomerErr
+	}
+
+	return response.ToNewCustomerResponseDto(), nil
 }
 
 func NewCustomerService(repo domain.CustomerRepository) CustomerServiceImpl {
