@@ -80,6 +80,17 @@ func (c CustomerRepositoryDb) Save(customer Customer) (*Customer, *errs.AppError
 	return &customer, nil
 }
 
+func (c CustomerRepositoryDb) Update(customer Customer) (*Customer, *errs.AppError) {
+	customerUpdate := "Update customers Set name=?, date_of_birth=?, city=?, zipcode=?, status=? where customer_id = ?"
+	_, err := c.dbClient.Exec(customerUpdate, customer.Name, customer.DateOfBirth, customer.City, customer.Zip, customer.Status, customer.Id)
+	if err != nil {
+		logger.Error("Error updating Customer table " + err.Error())
+		return nil, errs.NewUnexpectedError("unexpected database error")
+	}
+
+	return &customer, nil
+}
+
 func NewCustomerRepositoryDbConnection(dbClient *sqlx.DB) CustomerRepositoryDb {
 	return CustomerRepositoryDb{dbClient}
 }

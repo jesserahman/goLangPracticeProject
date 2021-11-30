@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jesserahman/goLangPracticeProject/domain"
+
 	"github.com/jesserahman/goLangPracticeProject/dto"
 
 	"github.com/gorilla/mux"
@@ -62,6 +64,26 @@ func (handler *CustomerHandler) handleCreateCustomer(w http.ResponseWriter, r *h
 		writeResponse(w, http.StatusBadRequest, err.Error())
 	} else {
 		customer, customerErr := handler.service.CreateNewCustomer(request)
+		if customerErr != nil {
+			writeResponse(w, customerErr.Code, customerErr.AsMessage())
+		} else {
+			writeResponse(w, http.StatusOK, customer)
+		}
+	}
+}
+
+func (handler *CustomerHandler) handleUpdateCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	customerId := vars["customer_id"]
+
+	var customer domain.Customer
+	customer.Id = customerId
+
+	err := json.NewDecoder(r.Body).Decode(&customer)
+	if err != nil {
+		writeResponse(w, http.StatusBadRequest, err.Error())
+	} else {
+		customer, customerErr := handler.service.UpdateCustomer(customer)
 		if customerErr != nil {
 			writeResponse(w, customerErr.Code, customerErr.AsMessage())
 		} else {

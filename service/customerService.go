@@ -11,6 +11,7 @@ type CustomerService interface {
 	GetCustomerById(string) (*dto.CustomerResponse, *errs.AppError)
 	GetCustomersByStatus(string) ([]dto.CustomerResponse, *errs.AppError)
 	CreateNewCustomer(dto.NewCustomerRequest) (*dto.NewCustomerResponse, *errs.AppError)
+	UpdateCustomer(customer domain.Customer) (*dto.CustomerResponse, *errs.AppError)
 }
 
 type CustomerServiceImpl struct {
@@ -24,7 +25,7 @@ func (service CustomerServiceImpl) GetAllCustomers() ([]dto.CustomerResponse, *e
 	}
 	var customersDto []dto.CustomerResponse
 	for _, customer := range customers {
-		customerDto := customer.ToDto()
+		customerDto := customer.ToCustomerResponseDto()
 		customersDto = append(customersDto, *customerDto)
 	}
 	return customersDto, nil
@@ -35,7 +36,7 @@ func (service CustomerServiceImpl) GetCustomerById(id string) (*dto.CustomerResp
 	if err != nil {
 		return nil, err
 	}
-	return customer.ToDto(), nil
+	return customer.ToCustomerResponseDto(), nil
 }
 
 func (service CustomerServiceImpl) GetCustomersByStatus(status string) ([]dto.CustomerResponse, *errs.AppError) {
@@ -45,7 +46,7 @@ func (service CustomerServiceImpl) GetCustomersByStatus(status string) ([]dto.Cu
 	}
 	var customersDto []dto.CustomerResponse
 	for _, customer := range customers {
-		customerDto := customer.ToDto()
+		customerDto := customer.ToCustomerResponseDto()
 		customersDto = append(customersDto, *customerDto)
 	}
 	return customersDto, nil
@@ -70,6 +71,15 @@ func (service CustomerServiceImpl) CreateNewCustomer(newCustomerRequestDto dto.N
 	}
 
 	return response.ToNewCustomerResponseDto(), nil
+}
+
+func (service CustomerServiceImpl) UpdateCustomer(customer domain.Customer) (*dto.CustomerResponse, *errs.AppError) {
+	response, updateCustomerErr := service.repository.Update(customer)
+	if updateCustomerErr != nil {
+		return nil, updateCustomerErr
+	}
+
+	return response.ToCustomerResponseDto(), nil
 }
 
 func NewCustomerService(repo domain.CustomerRepository) CustomerServiceImpl {

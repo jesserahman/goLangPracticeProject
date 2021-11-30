@@ -19,6 +19,7 @@ type CustomerRepository interface {
 	ById(string) (*Customer, *errs.AppError)
 	ByStatus(string) ([]Customer, *errs.AppError)
 	Save(Customer) (*Customer, *errs.AppError)
+	Update(Customer) (*Customer, *errs.AppError)
 }
 
 func (c Customer) getStatus() string {
@@ -29,7 +30,7 @@ func (c Customer) getStatus() string {
 	return status
 }
 
-func (c Customer) ToDto() *dto.CustomerResponse {
+func (c Customer) ToCustomerResponseDto() *dto.CustomerResponse {
 	return &dto.CustomerResponse{
 		Id:          c.Id,
 		Name:        c.Name,
