@@ -34,6 +34,18 @@ func (handler *AccountHandler) handleGetAccountsByCustomerId(w http.ResponseWrit
 	}
 }
 
+func (handler *AccountHandler) handleGetAccountById(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	accountId := vars["account_id"]
+
+	accounts, err := handler.service.GetAccountById(accountId)
+	if err != nil {
+		writeResponse(w, err.Code, err.AsMessage())
+	} else {
+		writeResponse(w, http.StatusOK, accounts)
+	}
+}
+
 func (handler *AccountHandler) handleCreateAccount(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	customerId := vars["customer_id"]

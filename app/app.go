@@ -45,6 +45,7 @@ func Run() {
 	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleUpdateCustomer).Methods(http.MethodPatch)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/account", accountHandler.handleCreateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/accounts", accountHandler.handleGetAccountsByCustomerId).Methods(http.MethodGet)
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.handleGetAccountById).Methods(http.MethodGet)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.handleUpdateAccount).Methods(http.MethodPatch)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.handleDeleteAccount).Methods(http.MethodDelete)
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transaction", transactionHandler.handleCreateNewTransaction).Methods(http.MethodPost)

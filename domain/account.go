@@ -17,6 +17,7 @@ type Account struct {
 type AccountRepository interface {
 	FindAll() ([]Account, *errs.AppError)
 	Save(Account) (*Account, *errs.AppError)
+	FindById(accountId string) (*Account, *errs.AppError)
 	FindByCustomerId(string) ([]Account, *errs.AppError)
 	DeleteAccountAndTransactions(string) *errs.AppError
 	Update(account Account) *errs.AppError

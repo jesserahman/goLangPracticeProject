@@ -20,11 +20,25 @@ func (a AccountRepositoryDb) FindAll() ([]Account, *errs.AppError) {
 	// query the DB, and store the result in ${customers}
 	err := a.dbClient.Select(&accounts, accountsQuery)
 	if err != nil {
-		logger.Error("Error querying customers table " + err.Error())
+		logger.Error("Error querying Accounts table " + err.Error())
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 
 	return accounts, nil
+}
+
+func (a AccountRepositoryDb) FindById(accountId string) (*Account, *errs.AppError) {
+	accountsQuery := fmt.Sprintf("select * from accounts where account_id = %s", accountId)
+
+	var account Account
+	// query the DB, and store the result in var customers
+	err := a.dbClient.Get(&account, accountsQuery)
+	if err != nil {
+		logger.Error("Error querying Accounts table " + err.Error())
+		return nil, errs.NewUnexpectedError("unexpected database error")
+	}
+
+	return &account, nil
 }
 
 func (a AccountRepositoryDb) FindByCustomerId(customerId string) ([]Account, *errs.AppError) {
@@ -34,7 +48,7 @@ func (a AccountRepositoryDb) FindByCustomerId(customerId string) ([]Account, *er
 	// query the DB, and store the result in var customers
 	err := a.dbClient.Select(&accounts, accountsQuery)
 	if err != nil {
-		logger.Error("Error querying customers table " + err.Error())
+		logger.Error("Error querying Accounts table " + err.Error())
 		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
 
