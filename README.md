@@ -22,6 +22,7 @@ There are currently 12 working endpoints in this project
 
 Sample JSON examples:
 <h4> Customers </h4>
+
 ``` 
 POST /customer
 {
