@@ -5,7 +5,7 @@ This project has been modified from the original project make use of additional 
 
 
 ## Usage
-There are currently 7 working endpoints in this project 
+There are currently 11 working endpoints in this project 
 
 - GET `/customers` returns a list of all the customers in the customers db
 - GET `/accounts` returns a list of all the accounts in the accounts db
