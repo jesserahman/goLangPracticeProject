@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/jesserahman/goLangPracticeProject/domain"
-
 	"github.com/gorilla/mux"
 	"github.com/jesserahman/goLangPracticeProject/dto"
 	"github.com/jesserahman/goLangPracticeProject/service"
@@ -60,13 +58,14 @@ func (handler *AccountHandler) handleUpdateAccount(w http.ResponseWriter, r *htt
 	vars := mux.Vars(r)
 	accountId := vars["account_id"]
 
-	var account domain.Account
-	account.AccountId = accountId
-	err := json.NewDecoder(r.Body).Decode(&account)
+	var updateAccountRequest dto.UpdateAccountRequest
+	updateAccountRequest.AccountId = accountId
+
+	err := json.NewDecoder(r.Body).Decode(&updateAccountRequest)
 	if err != nil {
 		writeResponse(w, http.StatusBadRequest, err.Error())
 	} else {
-		updateError := handler.service.UpdateAccount(account)
+		updateError := handler.service.UpdateAccount(updateAccountRequest)
 		if updateError != nil {
 			writeResponse(w, updateError.Code, updateError.Message)
 		} else {

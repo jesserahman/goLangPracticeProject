@@ -11,7 +11,7 @@ type Account struct {
 	OpeningDate string  `json:"opening_date" db:"opening_date"`
 	AccountType string  `json:"account_type" db:"account_type"`
 	Amount      float64 `json:"amount" db:"amount"`
-	Status      string  `json:"status" db:"status"`
+	Status      int     `json:"status" db:"status"`
 }
 
 type AccountRepository interface {

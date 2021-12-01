@@ -13,7 +13,7 @@ type AccountService interface {
 	CreateNewAccount(request dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
 	GetAccountsByCustomerId(string) ([]dto.AccountResponse, *errs.AppError)
 	DeleteAccountAndTransactionsByAccountId(accountId string) *errs.AppError
-	UpdateAccount(account domain.Account) *errs.AppError
+	UpdateAccount(dto.UpdateAccountRequest) *errs.AppError
 }
 
 type AccountServiceImpl struct {
@@ -64,7 +64,7 @@ func (service AccountServiceImpl) CreateNewAccount(request dto.NewAccountRequest
 		OpeningDate: time.Now().Format("2006-01-01 15:04:05"),
 		AccountType: request.AccountType,
 		Amount:      request.Amount,
-		Status:      "1",
+		Status:      1,
 	}
 	updatedAccount, err := service.repository.Save(account)
 	if err != nil {
@@ -75,10 +75,21 @@ func (service AccountServiceImpl) CreateNewAccount(request dto.NewAccountRequest
 	return newAccountResponseDto, nil
 }
 
-func (service AccountServiceImpl) UpdateAccount(account domain.Account) *errs.AppError {
-	err := service.repository.Update(account)
+func (service AccountServiceImpl) UpdateAccount(updateAccountRequest dto.UpdateAccountRequest) *errs.AppError {
+	err := updateAccountRequest.Validate()
 	if err != nil {
 		return err
+	}
+
+	account := domain.Account{
+		AccountId:   updateAccountRequest.AccountId,
+		AccountType: updateAccountRequest.AccountType,
+		Status:      updateAccountRequest.Status,
+	}
+
+	updateErr := service.repository.Update(account)
+	if updateErr != nil {
+		return updateErr
 	}
 	return nil
 }
