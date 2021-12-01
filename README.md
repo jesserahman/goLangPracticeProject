@@ -1,8 +1,7 @@
 # goLang Practice Project: Banking Application
 
-This project is a sample application based on this [udemy course](https://www.udemy.com/course/rest-based-microservices-api-development-in-go-lang/)
-This project has been modified from the original project make use of additional endpoints
-
+This project is a sample banking application based on this [udemy course](https://www.udemy.com/course/rest-based-microservices-api-development-in-go-lang/).
+This project has been modified from the original project through the use of additional endpoints as well as DB Updates and Deletes, which make use of other http methods.
 
 ## Usage
 There are currently 12 working endpoints in this project 
