@@ -9,9 +9,9 @@ import (
 )
 
 type AccountService interface {
-	GetAllAccounts() ([]dto.AccountResponse, *errs.AppError)
+	GetAllAccounts() ([]domain.Account, *errs.AppError)
 	CreateNewAccount(request dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
-	GetAccountsByCustomerId(string) ([]dto.AccountResponse, *errs.AppError)
+	GetAccountsByCustomerId(string) ([]domain.Account, *errs.AppError)
 	GetAccountById(string) (*domain.Account, *errs.AppError)
 	DeleteAccountAndTransactionsByAccountId(accountId string) *errs.AppError
 	UpdateAccount(dto.UpdateAccountRequest) *errs.AppError
@@ -21,30 +21,20 @@ type AccountServiceImpl struct {
 	repository domain.AccountRepository
 }
 
-func (service AccountServiceImpl) GetAllAccounts() ([]dto.AccountResponse, *errs.AppError) {
+func (service AccountServiceImpl) GetAllAccounts() ([]domain.Account, *errs.AppError) {
 	accounts, err := service.repository.FindAll()
 	if err != nil {
 		return nil, err
 	}
-	var accountsDto []dto.AccountResponse
-	for _, account := range accounts {
-		accountDto := account.ToAccountResponseDto()
-		accountsDto = append(accountsDto, *accountDto)
-	}
-	return accountsDto, nil
+	return accounts, nil
 }
 
-func (service AccountServiceImpl) GetAccountsByCustomerId(customerId string) ([]dto.AccountResponse, *errs.AppError) {
+func (service AccountServiceImpl) GetAccountsByCustomerId(customerId string) ([]domain.Account, *errs.AppError) {
 	accounts, err := service.repository.FindByCustomerId(customerId)
 	if err != nil {
 		return nil, err
 	}
-	var accountsDto []dto.AccountResponse
-	for _, account := range accounts {
-		accountDto := account.ToAccountResponseDto()
-		accountsDto = append(accountsDto, *accountDto)
-	}
-	return accountsDto, nil
+	return accounts, nil
 }
 
 func (service AccountServiceImpl) GetAccountById(accountId string) (*domain.Account, *errs.AppError) {

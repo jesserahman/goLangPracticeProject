@@ -23,16 +23,6 @@ type AccountRepository interface {
 	Update(account Account) *errs.AppError
 }
 
-func (a Account) ToAccountResponseDto() *dto.AccountResponse {
-	return &dto.AccountResponse{
-		AccountId:   a.AccountId,
-		CustomerId:  a.CustomerId,
-		OpeningDate: a.OpeningDate,
-		AccountType: a.AccountType,
-		Amount:      a.Amount,
-		Status:      a.Status,
-	}
-}
 func (a Account) ToNewAccountResponseDto() *dto.NewAccountResponse {
 	return &dto.NewAccountResponse{
 		AccountId: a.AccountId,
