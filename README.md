@@ -1,6 +1,6 @@
-# goLangPracticeProject
+# goLang Practice Project: Banking Application
 
-GoLangPracticeProject is a sample application based on this [udemy course](https://www.udemy.com/course/rest-based-microservices-api-development-in-go-lang/)
+This project is a sample application based on this [udemy course](https://www.udemy.com/course/rest-based-microservices-api-development-in-go-lang/)
 This project has been modified from the original project make use of additional endpoints
 
 
