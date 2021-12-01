@@ -60,6 +60,18 @@ func (a AccountRepositoryDb) Save(account Account) (*Account, *errs.AppError) {
 	return &account, nil
 }
 
+func (a AccountRepositoryDb) Update(account Account) *errs.AppError {
+	accountsUpdate := "Update accounts Set account_type=?, status=? where account_id = ?"
+	_, err := a.dbClient.Exec(accountsUpdate, account.AccountType, account.Status, account.AccountId)
+
+	if err != nil {
+		logger.Error("Error Updating Accounts table " + err.Error())
+		return errs.NewUnexpectedError("unexpected database error")
+	}
+
+	return nil
+}
+
 func (a AccountRepositoryDb) DeleteAccountAndTransactions(accountId string) *errs.AppError {
 	// starting database transaction block
 	tx, err := a.dbClient.Begin()

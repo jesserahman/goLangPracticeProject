@@ -12,14 +12,15 @@ There are currently 7 working endpoints in this project
 - POST `/customer` creates a new customer
 - GET `/customer/#{customer_id}` returns all the info for a specific customer (name, city, zip, status)
 - PATCH `/customer/#{customer_id}` updates the info for a specific customer (name, city, zip, status)
-- POST `/customer/#{customer?id}/account` creates an account for a specific customer
-- GET `/customer/#{customer?id}/accounts` returns all accounts for a specific customer
+- POST `/customer/#{customer_id}/account` creates an account for a specific customer
+- GET `/customer/#{customer_id}/accounts` returns all accounts for a specific customer
+- PATCH `/customer/#{customer_id}/account/#{account_id}` updates the info of a customer's account (type, status)
 - DELETE `/customer/#{customer?id}/account/#{account_id}` deletes a customer's account and all transactions associated with that account
 - POST `/customer/#{customer?id}/account/#{account_id}/transaction` creates a new transaction for a specific customer's account
 - GET `/customer/#{customer?id}/account/#{account_id}/transactions` returns all transactions for a specific customer's account
 
-Sample JSON examples
-
+Sample JSON examples:
+<h4> Customers </h4>
 ``` 
 POST /customer
 {
@@ -30,8 +31,6 @@ POST /customer
     "status" : 1
 }
 ```
-
-
 ``` 
 PATCH /customer/{customer_id}
 {
@@ -42,6 +41,7 @@ PATCH /customer/{customer_id}
     "status" : 1
 }
 ```
+<h4> Accounts </h4>
 
 ``` 
 POST /customer/{customer_id}/account
@@ -52,7 +52,16 @@ POST /customer/{customer_id}/account
 ```
 
 ``` 
-POST /customer/{customer_id}/account/{account_id}/transactions
+PATCH /customer/{customer_id}/account/{account_id}
+{
+    "account_type" : "checking",
+    "status" : "1"
+}
+```
+<h4> Transactions </h4>
+
+``` 
+POST /customer/{customer_id}/account/{account_id}/transaction
 {
     "amount" : 100.00,
     "transaction_type" : "deposit"
