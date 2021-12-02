@@ -12,6 +12,7 @@ type CustomerService interface {
 	GetCustomersByStatus(string) ([]dto.CustomerResponse, *errs.AppError)
 	CreateNewCustomer(dto.NewCustomerRequest) (*dto.NewCustomerResponse, *errs.AppError)
 	UpdateCustomer(customer domain.Customer) (*dto.CustomerResponse, *errs.AppError)
+	DeleteCustomer(customerId string) *errs.AppError
 }
 
 type CustomerServiceImpl struct {
@@ -80,6 +81,15 @@ func (service CustomerServiceImpl) UpdateCustomer(customer domain.Customer) (*dt
 	}
 
 	return response.ToCustomerResponseDto(), nil
+}
+
+func (service CustomerServiceImpl) DeleteCustomer(customerId string) *errs.AppError {
+	err := service.repository.Delete(customerId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewCustomerService(repo domain.CustomerRepository) CustomerServiceImpl {

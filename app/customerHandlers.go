@@ -92,6 +92,19 @@ func (handler *CustomerHandler) handleUpdateCustomer(w http.ResponseWriter, r *h
 	}
 }
 
+func (handler *CustomerHandler) handleDeleteCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	customerId := vars["customer_id"]
+
+	err := handler.service.DeleteCustomer(customerId)
+	if err != nil {
+		writeResponse(w, err.Code, err.AsMessage())
+	} else {
+		writeResponse(w, http.StatusOK, nil)
+	}
+
+}
+
 func writeResponse(w http.ResponseWriter, code int, data interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(code)

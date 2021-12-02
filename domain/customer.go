@@ -9,7 +9,7 @@ type Customer struct {
 	Id          string `json:"customer_id" db:"customer_id"`
 	Name        string `json:"name" db:"name"`
 	City        string `json:"city" db:"city"`
-	Zip         int    `json:"zip" db:"zipcode"`
+	Zip         int    `json:"zip_code" db:"zipcode"`
 	Status      int    `json:"status" db:"status"`
 	DateOfBirth string `json:"date_of_birth" db:"date_of_birth"`
 }
@@ -20,6 +20,7 @@ type CustomerRepository interface {
 	ByStatus(string) ([]Customer, *errs.AppError)
 	Save(Customer) (*Customer, *errs.AppError)
 	Update(Customer) (*Customer, *errs.AppError)
+	Delete(customerId string) *errs.AppError
 }
 
 func (c Customer) getStatus() string {

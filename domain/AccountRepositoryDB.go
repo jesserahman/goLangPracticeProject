@@ -45,7 +45,7 @@ func (a AccountRepositoryDb) FindByCustomerId(customerId string) ([]Account, *er
 	accounts := make([]Account, 0)
 	accountsQuery := fmt.Sprintf("select * from banking.accounts where customer_id = %s", customerId)
 
-	// query the DB, and store the result in var customers
+	// query the DB, and store the result in var accounts
 	err := a.dbClient.Select(&accounts, accountsQuery)
 	if err != nil {
 		logger.Error("Error querying Accounts table " + err.Error())
