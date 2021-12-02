@@ -4,13 +4,14 @@ This project is a sample banking application based on this [udemy course](https:
 This project has been modified from the original project through the use of additional endpoints as well as DB Updates and Deletes, which make use of other http methods.
 
 ## Usage
-There are currently 12 working endpoints in this project 
+There are currently 13 working endpoints in this project 
 
 - GET `/customers` returns a list of all the customers in the customers db
 - GET `/accounts` returns a list of all the accounts in the accounts db
 - POST `/customer` creates a new customer
 - GET `/customer/#{customer_id}` returns all the info for a specific customer (name, city, zip, status)
 - PATCH `/customer/#{customer_id}` updates the info for a specific customer (name, city, zip, status)
+- DELETE `/customer/#{customer?id}` deletes a customer along with each of the customer's accounts and all transactions associated with those accounts
 - POST `/customer/#{customer_id}/account` creates an account for a specific customer
 - GET `/customer/#{customer_id}/accounts` returns all accounts for a specific customer
 - GET `/customer/#{customer_id}/account/#{account_id}` returns all the info of a specific customer account (account id, customer id, opening date, account type, amount, status)
