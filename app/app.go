@@ -25,6 +25,8 @@ func sanityCheck() {
 
 func Run() {
 	err := godotenv.Load()
+	log.Println("Address: " , os.Getenv("SERVER_ADDRESS"))
+	log.Println("Port: " , os.Getenv("SERVER_PORT"))
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -70,6 +72,7 @@ func getDbClient() *sqlx.DB {
 	dbName := os.Getenv("DB_NAME")
 
 	datasource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbAddress, dbPort, dbName)
+	fmt.Println("DataSource: ", datasource)
 	dbClient, err := sqlx.Open("mysql", datasource)
 	if err != nil {
 		logger.Error("Error connecting to the DB " + err.Error())
