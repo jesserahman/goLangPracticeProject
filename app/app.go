@@ -31,14 +31,19 @@ func Run() {
 		log.Fatal("Error loading .env file")
 	}
 	sanityCheck()
+	log.Println("sanity check passed")
 
 	dbClient := getDbClient()
+
+	log.Println("got db client")
+	log.Println("test")
 
 	// create instance of the handler
 	customerHandler := CustomerHandler{service.NewCustomerService(domain.NewCustomerRepositoryDbConnection(dbClient))}
 	accountHandler := AccountHandler{service.NewAccountService(domain.NewAccountRepositoryDbConnection(dbClient))}
 	transactionHandler := TransactionHandler{service.NewTransactionService(domain.NewTransactionRepositoryDbConnection(dbClient))}
 
+	log.Println("created handlers")
 	router := mux2.NewRouter()
 	router.HandleFunc("/customers", customerHandler.handleCustomers).Methods(http.MethodGet)
 	router.HandleFunc("/accounts", accountHandler.handleAccounts).Methods(http.MethodGet)

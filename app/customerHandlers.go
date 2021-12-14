@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -20,6 +21,7 @@ type CustomerHandler struct {
 }
 
 func (handler *CustomerHandler) handleCustomers(w http.ResponseWriter, r *http.Request) {
+	log.Println("inside handle customers")
 	status := r.URL.Query().Get("status")
 	status = strings.ToLower(status)
 
