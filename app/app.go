@@ -38,19 +38,45 @@ func Run() {
 	transactionHandler := TransactionHandler{service.NewTransactionService(domain.NewTransactionRepositoryDbConnection(dbClient))}
 
 	router := mux2.NewRouter()
-	router.HandleFunc("/customers", customerHandler.handleCustomers).Methods(http.MethodGet)
-	router.HandleFunc("/accounts", accountHandler.handleAccounts).Methods(http.MethodGet)
-	router.HandleFunc("/customer", customerHandler.handleCreateCustomer).Methods(http.MethodPost)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleCustomer).Methods(http.MethodGet)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleUpdateCustomer).Methods(http.MethodPatch)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleDeleteCustomer).Methods(http.MethodDelete)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}/account", accountHandler.handleCreateAccount).Methods(http.MethodPost)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}/accounts", accountHandler.handleGetAccountsByCustomerId).Methods(http.MethodGet)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.handleGetAccountById).Methods(http.MethodGet)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.handleUpdateAccount).Methods(http.MethodPatch)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.handleDeleteAccount).Methods(http.MethodDelete)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transaction", transactionHandler.handleCreateNewTransaction).Methods(http.MethodPost)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transactions", transactionHandler.handleGetAllTransactionsByAccountId).Methods(http.MethodGet)
+	router.HandleFunc("/customers", customerHandler.handleCustomers).
+		Methods(http.MethodGet).
+		Name("GetAllCustomers")
+	router.HandleFunc("/accounts", accountHandler.handleAccounts).
+		Methods(http.MethodGet).
+		Name("GetAllAccounts")
+	router.HandleFunc("/customer", customerHandler.handleCreateCustomer).
+		Methods(http.MethodPost).
+		Name("CreateCustomer")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleCustomer).
+		Methods(http.MethodGet).
+		Name("GetCustomerById")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleUpdateCustomer).
+		Methods(http.MethodPatch).
+		Name("UpdateCustomerByID")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}", customerHandler.handleDeleteCustomer).
+		Methods(http.MethodDelete).
+		Name("DeleteCustomerById")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account", accountHandler.handleCreateAccount).
+		Methods(http.MethodPost).
+		Name("CreateAccount")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/accounts", accountHandler.handleGetAccountsByCustomerId).
+		Methods(http.MethodGet).
+		Name("GetAccountsByCustomerId")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.handleGetAccountById).
+		Methods(http.MethodGet).
+		Name("GetAccountsByAccountId")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.handleUpdateAccount).
+		Methods(http.MethodPatch).
+		Name("UpdateAccountByAccountId")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.handleDeleteAccount).
+		Methods(http.MethodDelete).
+		Name("DeleteAccountById")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transaction", transactionHandler.handleCreateNewTransaction).
+		Methods(http.MethodPost).
+		Name("CreateTransaction")
+	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transactions", transactionHandler.handleGetAllTransactionsByAccountId).
+		Methods(http.MethodGet).
+		Name("GetAllTransactionsByAccountId")
 	router.HandleFunc("/api/time", handleTime).Methods(http.MethodGet)
 
 	address := os.Getenv("SERVER_ADDRESS")
