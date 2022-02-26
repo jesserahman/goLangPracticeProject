@@ -79,6 +79,8 @@ func Run() {
 		Name("GetAllTransactionsByAccountId")
 	router.HandleFunc("/api/time", handleTime).Methods(http.MethodGet)
 
+	am := AuthMiddleware{domain.NewAuthRepository()}
+	router.Use(am.authorizationHandler())
 	address := os.Getenv("SERVER_ADDRESS")
 	port := os.Getenv("SERVER_PORT")
 

@@ -3,9 +3,10 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jesserahman/goLangPracticeProject/logger"
 	"net/http"
 	"net/url"
+
+	"github.com/jesserahman/goLangPracticeProject/logger"
 )
 
 type AuthRepository interface {
@@ -16,7 +17,9 @@ type RemoteAuthRepository struct {
 }
 
 func (r RemoteAuthRepository) IsAuthorized(token string, routeName string, vars map[string]string) bool {
+
 	u := buildVerifyURL(token, routeName, vars)
+	fmt.Println("url: ", u)
 
 	if response, err := http.Get(u); err != nil {
 		fmt.Println("Error while sending..." + err.Error())
@@ -48,4 +51,8 @@ func buildVerifyURL(token string, routeName string, vars map[string]string) stri
 	}
 	u.RawQuery = q.Encode()
 	return u.String()
+}
+
+func NewAuthRepository() RemoteAuthRepository {
+	return RemoteAuthRepository{}
 }
