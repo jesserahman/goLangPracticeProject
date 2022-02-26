@@ -3,8 +3,14 @@
 This project is a sample banking application based on this [udemy course](https://www.udemy.com/course/rest-based-microservices-api-development-in-go-lang/).
 This project has been modified from the original project through the use of additional endpoints as well as DB Updates and Deletes, which make use of other http methods.
 
+## Running the application
+`go run main.go`
+
+
 ## Usage
 There are currently 13 working endpoints in this project 
+
+To test API go to `localhost:{port-in-env-file}/`
 
 - GET `/customers` returns a list of all the customers in the customers db
 - GET `/accounts` returns a list of all the accounts in the accounts db
