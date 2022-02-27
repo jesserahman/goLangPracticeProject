@@ -2,14 +2,15 @@
 
 This project is a sample banking application based on this [udemy course](https://www.udemy.com/course/rest-based-microservices-api-development-in-go-lang/).
 This project has been modified from the original project through the use of additional endpoints as well as DB Updates and Deletes, which make use of other http methods.
+This project also works with another project: [GoLangAuthService](https://github.com/jesserahman/goLangAuth) to return and validate access tokens that will be required to access any endpoint. 
 
 ## Running the application
 - `go run main.go`
 - Use token to hit all endpoints
 
 ### Getting auth token
-- Spin up Auth Service
-- GET `/auth/login` to get Bearer token
+- Spin up [Auth Service](https://github.com/jesserahman/goLangAuth)
+- POST `/auth/login` to get Bearer token
 
 ## Usage
 There are currently 13 working endpoints in this project
