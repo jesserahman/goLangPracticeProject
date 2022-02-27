@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/jesserahman/goLangPracticeProject/logger"
 )
@@ -19,7 +20,6 @@ type RemoteAuthRepository struct {
 func (r RemoteAuthRepository) IsAuthorized(token string, routeName string, vars map[string]string) bool {
 
 	u := buildVerifyURL(token, routeName, vars)
-	fmt.Println("url: ", u)
 
 	if response, err := http.Get(u); err != nil {
 		fmt.Println("Error while sending..." + err.Error())
@@ -36,10 +36,11 @@ func (r RemoteAuthRepository) IsAuthorized(token string, routeName string, vars 
 
 // Sample: localhost:8081/auth/verify?token=aaaa.bbbb.cccc&routeName=GetCustomers&customer_id=2000
 func buildVerifyURL(token string, routeName string, vars map[string]string) string {
+
 	u := url.URL{
 		Scheme: "http",
-		Host:   "localhost:8081",
-		Path:   "/auth/verify",
+		Host:   os.Getenv("AUTH_SERVICE_HOST"),
+		Path:   os.Getenv("AUTH_SERVICE_VERIFY_PATH"),
 	}
 
 	q := u.Query()

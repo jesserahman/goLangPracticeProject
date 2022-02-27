@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -23,7 +22,6 @@ func (a AuthMiddleware) authorizationHandler() func(http.Handler) http.Handler {
 
 			if authHeader != "" {
 				token := getTokenFromHeader(authHeader)
-				fmt.Println("token: ", token)
 				isAuthorized := a.repository.IsAuthorized(token, currentRoute.GetName(), currentRouteVars)
 
 				if isAuthorized {
