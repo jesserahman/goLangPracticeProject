@@ -77,7 +77,6 @@ func Run() {
 	router.HandleFunc("/customer/{customer_id:[0-9]+}/account/{account_id:[0-9]+}/transactions", transactionHandler.handleGetAllTransactionsByAccountId).
 		Methods(http.MethodGet).
 		Name("GetAllTransactionsByAccountId")
-	router.HandleFunc("/api/time", handleTime).Methods(http.MethodGet)
 
 	am := AuthMiddleware{domain.NewAuthRepository()}
 	router.Use(am.authorizationHandler())

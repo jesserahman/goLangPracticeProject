@@ -17,7 +17,7 @@ type AccountRepositoryDb struct {
 func (a AccountRepositoryDb) FindAll() ([]Account, *errs.AppError) {
 	accounts := make([]Account, 0)
 	accountsQuery := "select * from accounts"
-	// query the DB, and store the result in ${customers}
+	// query the DB, and store the result in ${accounts}
 	err := a.dbClient.Select(&accounts, accountsQuery)
 	if err != nil {
 		logger.Error("Error querying Accounts table " + err.Error())
@@ -31,7 +31,7 @@ func (a AccountRepositoryDb) FindById(accountId string) (*Account, *errs.AppErro
 	accountsQuery := fmt.Sprintf("select * from accounts where account_id = %s", accountId)
 
 	var account Account
-	// query the DB, and store the result in var customers
+	// query the DB, and store the result in var account
 	err := a.dbClient.Get(&account, accountsQuery)
 	if err != nil {
 		logger.Error("Error querying Accounts table " + err.Error())
