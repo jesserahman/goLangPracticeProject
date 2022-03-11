@@ -8,6 +8,12 @@ This project also works with another project: [GoLangAuthService](https://github
 - `go run main.go`
 - Use token to hit all endpoints
 
+### Auth Middleware
+- In order to access any route (endpoint) the request and response must go through the middleware
+- AuthMiddleware gets the current route, the current route variables, and the header and passes all the info to the isAuthorized() method of the `AuthRepository`
+- `IsAuthorized()` method builds the `verify URL` and sends a `GET` request to the AuthService
+- Based on the response from the Auth Service, the user with either be `authorized` or `unauthorized` to hit that endpoint
+
 ### Getting auth token
 - Spin up [Auth Service](https://github.com/jesserahman/goLangAuth)
 - POST `/auth/login` to get Bearer token
