@@ -78,8 +78,9 @@ func Run() {
 		Methods(http.MethodGet).
 		Name("GetAllTransactionsByAccountId")
 
-	am := AuthMiddleware{domain.NewAuthRepository()}
-	router.Use(am.authorizationHandler())
+	// *********  TEMPORARILY COMMENTING OUT TO TEST WITH DOCKER *********
+	//am := AuthMiddleware{domain.NewAuthRepository()}
+	//router.Use(am.authorizationHandler())
 	address := os.Getenv("SERVER_ADDRESS")
 	port := os.Getenv("SERVER_PORT")
 
