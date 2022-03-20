@@ -82,6 +82,7 @@ func Run() {
 	//am := AuthMiddleware{domain.NewAuthRepository()}
 	//router.Use(am.authorizationHandler())
 	address := os.Getenv("SERVER_ADDRESS")
+	fmt.Println("Server address: ", address)
 	port := os.Getenv("SERVER_PORT")
 
 	err = http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), router)
