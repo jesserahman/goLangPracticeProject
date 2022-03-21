@@ -101,6 +101,9 @@ Docker cheatsheet
 - Run image as a container: 
 `docker run -p 8082:8082 <image_name>`
 
+- List docker containers: 
+`docker ps`
+
 - Stop docker container: 
 `docker stop <container_name>`
 
