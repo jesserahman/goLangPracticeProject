@@ -18,7 +18,7 @@ import (
 )
 
 func sanityCheck() {
-	if os.Getenv("SERVER_ADDRESS") == "" || os.Getenv("SERVER_PORT") == "" {
+	if os.Getenv("SERVER_PORT") == "" {
 		log.Fatal("Env variables not defined...")
 	}
 }
@@ -78,12 +78,12 @@ func Run() {
 		Methods(http.MethodGet).
 		Name("GetAllTransactionsByAccountId")
 
-	am := AuthMiddleware{domain.NewAuthRepository()}
-	router.Use(am.authorizationHandler())
-	address := os.Getenv("SERVER_ADDRESS")
+	// *********  TEMPORARILY COMMENTING OUT TO TEST WITH DOCKER *********
+	//am := AuthMiddleware{domain.NewAuthRepository()}
+	//router.Use(am.authorizationHandler())
 	port := os.Getenv("SERVER_PORT")
 
-	err = http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), router)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

@@ -87,3 +87,25 @@ POST /customer/{customer_id}/account/{account_id}/transaction
     "transaction_type" : "deposit"
 }
 ```
+
+## Docker
+
+Docker cheatsheet
+
+- Build docker image: 
+`docker build --tag <image_name> .`
+
+- Show all docker images: 
+`docker image ls`
+
+- Run image as a container: 
+`docker run -p 8082:8082 <image_name>`
+
+- List docker containers: 
+`docker ps`
+
+- Stop docker container: 
+`docker stop <container_name>`
+
+- Remove docker image
+  `docker rmi -f <image_name>`
