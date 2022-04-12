@@ -1,42 +1,30 @@
 version : "3.9"
 
 services:
-  db:
+  mysql:
     platform: linux/x86_64
     image: mysql:8.0.28
-    container_name: "database"
-    ports:
-      - "3307:3307"
     environment:
-      - DB_USER=root
-      - DB_PASSWORD=jesse jesse
-      - DB_ADDRESS=localhost
-      - DB_PORT=3306
-      - DB_NAME=banking
+      - MYSQL_ROOT_PASSWORD=jesse jesse
+      - MYSQL_DATABASE=banking
     networks:
       - fullstack
-    volumes:
-      - database_mysql:/var/lib/mysql/data
-
 
   web:
     build: .
-    container_name: "rest-api"
     environment:
       DB_USER: "root"
       DB_PASSWORD:  "jesse jesse"
-      DB_ADDRESS: "localhost"
-      DB_PORT: "3307"
+      DB_ADDRESS: "mysql"
+      DB_PORT: "3306"
       DB_NAME: "banking"
     ports:
       - "8082:8082"
     depends_on:
-      - db
+      - mysql
     networks:
       - fullstack
 
-volumes:
-  database_mysql:
 
 networks:
   fullstack:
