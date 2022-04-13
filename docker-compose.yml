@@ -2,8 +2,11 @@ version : "3.9"
 
 services:
   mysql:
+    build: ./db
     platform: linux/x86_64
     image: mysql:8.0.28
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=jesse jesse
       - MYSQL_DATABASE=banking
@@ -24,7 +27,6 @@ services:
       - mysql
     networks:
       - fullstack
-
 
 networks:
   fullstack:

@@ -111,5 +111,11 @@ Docker cheatsheet
   `docker rmi -f <image_name>`
 
 ## Migrations
+
+### Locally 
 - To migrate up: `migrate -database "mysql://root:jesse jesse@tcp(localhost:3306)/banking" -path /Users/jesserahman/Documents/personalProjects/goLangPracticeProject/db/migrations up`
 - To migrate down: `migrate -database "mysql://root:jesse jesse@tcp(localhost:3306)/banking" -path /Users/jesserahman/Documents/personalProjects/goLangPracticeProject/db/migrations down`
+
+### Inside Docker
+- To migrate up: `docker run -v /Users/jesserahman/Documents/personalProjects/goLangPracticeProject/db/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database "mysql://root:jesse jesse@tcp(localhost:3306)/banking" up`
+- To migrate down: `docker run -v /Users/jesserahman/Documents/personalProjects/goLangPracticeProject/db/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database "mysql://root:jesse jesse@tcp(localhost:3306)/banking" down`
