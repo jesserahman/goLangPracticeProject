@@ -109,3 +109,7 @@ Docker cheatsheet
 
 - Remove docker image
   `docker rmi -f <image_name>`
+
+## Migrations
+- To migrate up: `migrate -database "mysql://root:jesse jesse@tcp(localhost:3306)/banking" -path /Users/jesserahman/Documents/personalProjects/goLangPracticeProject/db/migrations up`
+- To migrate down: `migrate -database "mysql://root:jesse jesse@tcp(localhost:3306)/banking" -path /Users/jesserahman/Documents/personalProjects/goLangPracticeProject/db/migrations down`
