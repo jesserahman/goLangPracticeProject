@@ -119,3 +119,6 @@ Docker cheatsheet
 ### Inside Docker
 - To migrate up: `docker run -v /Users/jesserahman/Documents/personalProjects/goLangPracticeProject/db/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database "mysql://root:jesse jesse@tcp(localhost:3306)/banking" up`
 - To migrate down: `docker run -v /Users/jesserahman/Documents/personalProjects/goLangPracticeProject/db/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database "mysql://root:jesse jesse@tcp(localhost:3306)/banking" down`
+
+With Migrator:
+`docker run --network host migrator -path=/migrations/ -database "mysql://root:jesse jesse@tcp(localhost:3306)/banking" up`

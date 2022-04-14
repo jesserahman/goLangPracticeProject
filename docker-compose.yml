@@ -12,6 +12,8 @@ services:
       - MYSQL_DATABASE=banking
     networks:
       - fullstack
+    volumes:
+      - mysql_data:/var/lib/mysql
 
   web:
     build: .
@@ -27,7 +29,11 @@ services:
       - mysql
     networks:
       - fullstack
+    volumes:
+      - .:/app/
 
 networks:
   fullstack:
     driver: bridge
+volumes:
+  mysql_data:
