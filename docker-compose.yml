@@ -1,39 +1,39 @@
 version : "3.9"
 
 services:
-  mysql:
+  mysqldb:
+    image: mysql:8.0.28
     build: ./db
     platform: linux/x86_64
-    image: mysql:8.0.28
     ports:
-      - "3306:3306"
+      - '3306:3306'
     environment:
-      - MYSQL_ROOT_PASSWORD=jesse jesse
+      - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=banking
     networks:
-      - fullstack
+      - golang-net
     volumes:
       - mysql_data:/var/lib/mysql
 
-  web:
+  golang-practice-project:
     build: .
+    ports:
+      - '8082:8082'
+    networks:
+      - golang-net
     environment:
       DB_USER: "root"
-      DB_PASSWORD:  "jesse jesse"
+      DB_PASSWORD: "secret"
       DB_ADDRESS: "mysql"
       DB_PORT: "3306"
       DB_NAME: "banking"
-    ports:
-      - "8082:8082"
     depends_on:
-      - mysql
-    networks:
-      - fullstack
+      - mysqldb
     volumes:
       - .:/app/
 
 networks:
-  fullstack:
+  golang-net:
     driver: bridge
 volumes:
   mysql_data:
