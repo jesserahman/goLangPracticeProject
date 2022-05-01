@@ -24,6 +24,7 @@ func sanityCheck() {
 }
 
 func Run() {
+	fmt.Println("In APP FILE!!!")
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -79,8 +80,8 @@ func Run() {
 		Name("GetAllTransactionsByAccountId")
 
 	// *********  TEMPORARILY COMMENTING OUT TO TEST WITH DOCKER *********
-	//am := AuthMiddleware{domain.NewAuthRepository()}
-	//router.Use(am.authorizationHandler())
+	am := AuthMiddleware{domain.NewAuthRepository()}
+	router.Use(am.authorizationHandler())
 	port := os.Getenv("SERVER_PORT")
 
 	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
@@ -92,11 +93,12 @@ func Run() {
 func getDbClient() *sqlx.DB {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
-	dbAddress := os.Getenv("DB_ADDRESS")
+	dbAddress := os.Getenv("DOCKER_DB_ADDRESS")
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
 	datasource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbAddress, dbPort, dbName)
+	fmt.Println("Datasource: ", datasource)
 	dbClient, err := sqlx.Open("mysql", datasource)
 	if err != nil {
 		logger.Error("Error connecting to the DB " + err.Error())
