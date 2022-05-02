@@ -24,13 +24,28 @@ services:
     environment:
       DB_USER: "root"
       DB_PASSWORD: "secret"
-      DB_ADDRESS: "mysql"
+      DB_ADDRESS: "mysqldb"
       DB_PORT: "3306"
       DB_NAME: "banking"
     depends_on:
       - mysqldb
     volumes:
       - .:/app/
+
+  golang-auth-project:
+    image: 'jesserahman1/golang-auth:latest'
+    ports:
+      - '8081:8081'
+    networks:
+      - golang-net
+    environment:
+      DB_USER: "root"
+      DB_PASSWORD: "secret"
+      DB_ADDRESS: "mysqldb"
+      DB_PORT: "3306"
+      DB_NAME: "banking"
+    depends_on:
+      - mysqldb
 
 networks:
   golang-net:

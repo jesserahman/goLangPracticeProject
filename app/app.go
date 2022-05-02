@@ -80,9 +80,9 @@ func Run() {
 		Name("GetAllTransactionsByAccountId")
 
 	// *********  TEMPORARILY COMMENTING OUT TO TEST WITH DOCKER *********
-	//am := AuthMiddleware{domain.NewAuthRepository()}
-	//router.Use(am.authorizationHandler())
-	fmt.Println("Without auth")
+	am := AuthMiddleware{domain.NewAuthRepository()}
+	router.Use(am.authorizationHandler())
+	fmt.Println("WITH auth")
 	port := os.Getenv("SERVER_PORT")
 
 	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
