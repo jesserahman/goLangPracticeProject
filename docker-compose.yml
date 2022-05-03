@@ -12,8 +12,6 @@ services:
       - MYSQL_DATABASE=banking
     networks:
       - golang-net
-    volumes:
-      - mysql_data:/var/lib/mysql
 
   golang-practice-project:
     build: .
@@ -29,8 +27,6 @@ services:
       DB_NAME: "banking"
     depends_on:
       - mysqldb
-    volumes:
-      - .:/app/
 
   golang-auth-project:
     image: 'jesserahman1/golang-auth:latest'
@@ -50,5 +46,3 @@ services:
 networks:
   golang-net:
     driver: bridge
-volumes:
-  mysql_data:

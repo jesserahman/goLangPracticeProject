@@ -24,7 +24,6 @@ func sanityCheck() {
 }
 
 func Run() {
-	fmt.Println("In APP FILE!!!")
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
