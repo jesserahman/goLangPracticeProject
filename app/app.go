@@ -1,17 +1,20 @@
 package app
 
 import (
+	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/jmoiron/sqlx"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/jesserahman/goLangPracticeProject/logger"
-	"github.com/jmoiron/sqlx"
-
 	"github.com/joho/godotenv"
 
+	"github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	mux2 "github.com/gorilla/mux"
 	"github.com/jesserahman/goLangPracticeProject/domain"
 	"github.com/jesserahman/goLangPracticeProject/service"
@@ -97,16 +100,56 @@ func getDbClient() *sqlx.DB {
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
-	datasource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbAddress, dbPort, dbName)
+	datasource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?multiStatements=true", dbUser, dbPassword, dbAddress, dbPort, dbName)
 	fmt.Println("Datasource: ", datasource)
 	dbClient, err := sqlx.Open("mysql", datasource)
+	//if err != nil {
+	//	logger.Error("Error connecting to the DB " + err.Error())
+	//	panic(err)
+	//}
+	//// See "Important settings" section.
+	//dbClient.SetConnMaxLifetime(time.Minute * 3)
+	//dbClient.SetMaxOpenConns(10)
+	//dbClient.SetMaxIdleConns(10)
+
+	db, err := sql.Open("mysql", datasource)
 	if err != nil {
-		logger.Error("Error connecting to the DB " + err.Error())
-		panic(err)
+		log.Fatalf("could not connect to the MySQL database... %v", err)
 	}
-	// See "Important settings" section.
-	dbClient.SetConnMaxLifetime(time.Minute * 3)
-	dbClient.SetMaxOpenConns(10)
-	dbClient.SetMaxIdleConns(10)
+
+	for {
+		fmt.Print("starting loop")
+
+		err = db.Ping()
+		if err == nil {
+			fmt.Println("Breaking out of loop")
+			break
+		}
+
+		fmt.Println("Pinging again!")
+		time.Sleep(2 * time.Second)
+		continue
+
+	}
+
+	// Run migrations
+	driver, err := mysql.WithInstance(db, &mysql.Config{})
+	if err != nil {
+		log.Fatalf("could not start sql migration... %v", err)
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(
+		fmt.Sprintf("file://db/migrations"), // file://path/to/directory
+		"mysql", driver)
+
+	if err != nil {
+		log.Fatalf("migration failed... %v", err)
+	}
+
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatalf("An error occurred while syncing the database.. %v", err)
+	}
+
+	log.Println("Database migrated")
 	return dbClient
 }
