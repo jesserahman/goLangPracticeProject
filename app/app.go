@@ -103,16 +103,17 @@ func getDbClient() *sqlx.DB {
 		log.Fatalf("could not connect to the MySQL database... %v", err)
 	}
 
+	// Pinging DB until it's ready
+	fmt.Println("Starting to Ping DB")
 	for {
-		fmt.Print("starting loop")
 
 		err = db.Ping()
 		if err == nil {
-			fmt.Println("Breaking out of loop")
+			fmt.Println("DB ready for Migrations")
 			break
 		}
 
-		fmt.Println("Pinging again!")
+		fmt.Println("DB not ready.. Pinging again!")
 		time.Sleep(2 * time.Second)
 		continue
 
