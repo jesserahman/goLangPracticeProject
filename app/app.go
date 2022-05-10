@@ -11,8 +11,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
-
 	"github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	mux2 "github.com/gorilla/mux"
@@ -27,10 +25,6 @@ func sanityCheck() {
 }
 
 func Run() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 	sanityCheck()
 
 	dbClient := getDbClient()
@@ -81,13 +75,13 @@ func Run() {
 		Methods(http.MethodGet).
 		Name("GetAllTransactionsByAccountId")
 
-	// *********  TEMPORARILY COMMENTING OUT TO TEST WITH DOCKER *********
+	// Adding auth middleware
 	am := AuthMiddleware{domain.NewAuthRepository()}
 	router.Use(am.authorizationHandler())
 	fmt.Println("WITH auth")
 	port := os.Getenv("SERVER_PORT")
 
-	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
+	err := http.ListenAndServe(fmt.Sprintf(":%s", port), router)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -103,14 +97,6 @@ func getDbClient() *sqlx.DB {
 	datasource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?multiStatements=true", dbUser, dbPassword, dbAddress, dbPort, dbName)
 	fmt.Println("Datasource: ", datasource)
 	dbClient, err := sqlx.Open("mysql", datasource)
-	//if err != nil {
-	//	logger.Error("Error connecting to the DB " + err.Error())
-	//	panic(err)
-	//}
-	//// See "Important settings" section.
-	//dbClient.SetConnMaxLifetime(time.Minute * 3)
-	//dbClient.SetMaxOpenConns(10)
-	//dbClient.SetMaxIdleConns(10)
 
 	db, err := sql.Open("mysql", datasource)
 	if err != nil {

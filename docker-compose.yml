@@ -25,11 +25,15 @@ services:
       DB_ADDRESS: "mysqldb"
       DB_PORT: "3306"
       DB_NAME: "banking"
+      SERVER_PORT: "8081"
+      AUTH_SERVICE_VERIFY_PATH: "/auth/verify"
+      DOCKER_AUTH_SERVICE_HOST: "host.docker.internal:8081"
+      AUTH_SERVICE_HOST: "localhost:8081"
     depends_on:
       - mysqldb
 
   golang-auth-project:
-    image: 'jesserahman1/golang-auth:latest'
+    image: 'jesserahman1/golang-auth:no-env-file'
     ports:
       - '8081:8081'
     networks:
@@ -40,6 +44,8 @@ services:
       DB_ADDRESS: "mysqldb"
       DB_PORT: "3306"
       DB_NAME: "banking"
+      HMAC_SAMPLE_SECRET: "HMAC_SAMPLE_SECRET"
+      SERVER_PORT: "8081"
     depends_on:
       - mysqldb
 
