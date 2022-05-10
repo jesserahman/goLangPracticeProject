@@ -90,7 +90,7 @@ func Run() {
 func getDbClient() *sqlx.DB {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
-	dbAddress := os.Getenv("DOCKER_DB_ADDRESS")
+	dbAddress := os.Getenv("DB_ADDRESS")
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
