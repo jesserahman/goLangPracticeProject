@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-auth-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: golang-auth-deployment
+  template:
+    metadata:
+      labels:
+        app: golang-auth-deployment
+    spec:
+      containers:
+        - name: golang-auth-deployment
+          image: jesserahman1/golang-auth:no-env-file
+          env:
+            - name: DB_USER
+              value: "root"
+            - name: DB_PASSWORD
+              value: "secret"
+            - name: DB_ADDRESS
+              value: "mysqldb"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: "banking"
+            - name: SERVER_PORT
+              value: "8081"
+            - name: HMAC_SAMPLE_SECRET
+              value: "HMAC_SAMPLE_SECRET"

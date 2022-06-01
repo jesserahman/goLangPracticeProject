@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: golang-auth-service
+spec:
+  selector:
+    app: golang-auth-deployment
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081

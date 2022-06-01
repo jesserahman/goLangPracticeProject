@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-practice-project-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: golang-practice-project-deployment
+  template:
+    metadata:
+      labels:
+        app: golang-practice-project-deployment
+    spec:
+      containers:
+        - name: golang-practice-project-deployment
+          image: jesserahman1/golang-practice-project
+          env:
+            - name: DB_USER
+              value: "root"
+            - name: DB_PASSWORD
+              value: "secret"
+            - name: DB_ADDRESS
+              value: "mysqldb"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: "banking"
+            - name: SERVER_PORT
+              value: "8082"
+            - name: AUTH_SERVICE_VERIFY_PATH
+              value: "/auth/verify"
+            - name: DOCKER_AUTH_SERVICE_HOST
+              value: "host.docker.internal:8081"
