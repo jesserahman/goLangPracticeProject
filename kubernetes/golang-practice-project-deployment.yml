@@ -31,4 +31,4 @@ spec:
             - name: AUTH_SERVICE_VERIFY_PATH
               value: "/auth/verify"
             - name: DOCKER_AUTH_SERVICE_HOST
-              value: "host.docker.internal:8081"
+              value: "golang-auth-service.default:8081"
